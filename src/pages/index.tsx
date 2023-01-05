@@ -1,5 +1,7 @@
+import Authenticated from '@/layouts/Authenticated';
 import { Meta } from '@/layouts/Meta';
 import { Main } from '@/templates/Main';
+import { Box } from '@mui/material';
 
 const Index = () => {
   return (
@@ -11,7 +13,11 @@ const Index = () => {
         />
       }
     >
-      <h1>Next.js YBook</h1>
+      <Authenticated>
+        <Box>
+          <h1>Hello world</h1>
+        </Box>
+      </Authenticated>
     </Main>
   );
 };
