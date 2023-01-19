@@ -1,12 +1,14 @@
+import { UserCtrlService } from "@/services/openapi";
 import { useEffect } from "react";
-import {login as loginUser, logout as logoutUser, signUp, confirmSignUp, resetPasswordSentCode, resetPasswordConfirm, getCurrentSession} from "@/lib/utils"
+
 import { useSessionCtx } from "../contexts/SessionCtx";
+import { login as loginUser, logout as logoutUser, signUp, confirmSignUp, resetPasswordSentCode, resetPasswordConfirm, getCurrentSession } from "../utils/cognito";
 
 const useAuth = () => {
 
-  const {setSession, clearSession} = useSessionCtx();
-
+  const { setSession, clearSession } = useSessionCtx();
   
+   
   useEffect(() => {
     console.log('useAuth useEffect');
   }, []);
@@ -21,9 +23,9 @@ const useAuth = () => {
     }) => {
     await loginUser({ username: email, password });
     setSession(await getCurrentSession());
-  };
+   };
 
-  const register = ({ 
+  const register = async ({ 
     email,
     password,
     name,
@@ -34,7 +36,15 @@ const useAuth = () => {
       name: string;
       given_name: string;
   }) => {
-    signUp({email, password, name, given_name});
+    await signUp({ email, password, name, given_name });
+    setSession(await getCurrentSession());
+    UserCtrlService.userCtrlCreate({
+      email: email,
+      firstname: given_name,
+      lastname: name
+    }).catch((err) => {
+      console.log(err);
+    });
   };
 
   const confirmUser = ({

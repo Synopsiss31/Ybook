@@ -1,11 +1,10 @@
+import Authentication from '@/components/auth/Authentication';
+import TopBar from '@/components/topbar/TopBar';
 import { useSessionCtx } from '@/lib/contexts/SessionCtx';
+import { UserCtxProvider } from '@/lib/contexts/UserCtx';
 import useAuth from '@/lib/hooks/useAuth';
-import LogoutIcon from '@mui/icons-material/Logout';
-import { IconButton } from '@mui/material';
 import React from 'react';
 import { Toaster } from 'react-hot-toast';
-import toast from 'react-hot-toast';
-import Authentication from '@/components/auth/Authentication';
 interface IAuthenticatedProps {
   children: React.ReactNode;
 }
@@ -24,21 +23,14 @@ const Authenticated: React.FC<IAuthenticatedProps> = ({ children }) => {
 
   return (
     <>
-      <IconButton onClick={
-        () => {
-            logout();
-            toast('Logged out successfully', {
-              icon: '👋',
-            })
-        }
-      }>
-        <LogoutIcon/>
-      </IconButton>
-      <div className="flex flex-col min-h-screen">
-        <div className="flex flex-col flex-1">
-          <main className="flex-1">{children}</main>
+      <UserCtxProvider>
+        <TopBar />
+        <div className="flex flex-col min-h-screen">
+          <div className="flex flex-col flex-1">
+            <main className="flex-1">{children}</main>
+          </div>
         </div>
-      </div>
+      </UserCtxProvider>
     </>
   );
 };

@@ -1,9 +1,13 @@
 import { Session } from 'aws-sdk/clients/appstream';
 import React, { createContext, useContext } from 'react';
 
+interface ISession extends Session{
+  username: string;
+}
+
 interface SessionCtxType {
-  session: Session | null;
-  setSession: (session: Session) => void;
+  session: ISession | null;
+  setSession: (session: ISession) => void;
   clearSession: () => void;
 }
 
@@ -14,7 +18,27 @@ const SessionCtx = createContext<SessionCtxType>({
 });
 
 const SessionCtxProvider: React.FC<React.PropsWithChildren<Record<string, unknown>>> = ({ children }) => {
-  const [session, setSession] = React.useState<Session | null>(null);
+  const [session, setSession] = React.useState<ISession | null>(null);
+
+  React.useEffect(() => {
+    if (!session) {
+      // check if session is in local storage
+      const sessionStr = localStorage.getItem('session');
+      if (sessionStr) {
+        const session = JSON.parse(sessionStr) as ISession;
+        setSession(session);
+      }
+    }
+  }, [session]);
+
+  React.useEffect(() => {
+    if (session) {
+      localStorage.setItem('session', JSON.stringify(session));
+    } else {
+      localStorage.removeItem('session');
+    }
+  }, [session]);
+  
 
   const clearSession = () => {
     setSession(null);
@@ -28,7 +52,11 @@ const SessionCtxProvider: React.FC<React.PropsWithChildren<Record<string, unknow
 };
 
 const useSessionCtx = () => {
-  return useContext(SessionCtx);
+  const context = useContext(SessionCtx);
+  if(context === undefined) {
+    throw new Error('useSessionCtx must be used within SessionCtxProvider');
+  }
+  return context;
 }
 
 const withSession = <P extends object>(Component: React.ComponentType<P>) => {
@@ -41,4 +69,7 @@ const withSession = <P extends object>(Component: React.ComponentType<P>) => {
   };
 };
 
+
 export { SessionCtxProvider, useSessionCtx, withSession };
+
+export type { ISession, SessionCtxType };

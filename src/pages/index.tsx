@@ -15,7 +15,7 @@ const Index = () => {
     >
       <Authenticated>
         <Box>
-          <h1>Hello world</h1>
+          ...
         </Box>
       </Authenticated>
     </Main>

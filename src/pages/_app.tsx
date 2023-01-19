@@ -1,3 +1,4 @@
+import { withColorMode } from '@/lib/contexts/ColorModeContext';
 import { withSession } from '@/lib/contexts/SessionCtx';
 import type { AppProps } from 'next/app';
 
@@ -14,4 +15,4 @@ const App : React.FC<AppProps> = ({
   return <Component {...pageProps} />;
 }
 
-export default withSession(App);
+export default withSession(withColorMode(App));
