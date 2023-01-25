@@ -1,6 +1,5 @@
 import { getIdToken } from '@/lib/utils/cognito';
 import { UserModel } from '@/types/models';
-import { useState, useEffect } from 'react';
 import useSWR from 'swr';
 
 const DEFAULT_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -36,18 +35,11 @@ const useCreateUser = (user: UserCreation) => {
 
 const useGetCurrentUser = () => {
 
-  const [idToken, setIdToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    getIdToken().then((idToken: string) => {
-          console.log('idToken', idToken);
-
-      setIdToken(idToken);
-    });
-  }, []);
-
-
   const fetcher = async (url: string) => {
+    const idToken = await getIdToken();
+
+    console.log("idToken", idToken);
+
     const response = await fetch(`${DEFAULT_URL}${url}`, {
       method: 'GET',
       headers: {
@@ -76,16 +68,10 @@ const useGetCurrentUser = () => {
 }
 
 const useReadUser = (filters: any) => {
-  
-    const [idToken, setIdToken] = useState<string | null>(null);
-
-    useEffect(() => {
-      getIdToken().then((idToken: string) => {
-        setIdToken(idToken);
-      });
-    }, []);
 
   const fetcher = async (url: string) => {
+    const idToken = await getIdToken();
+
     const response = await fetch(`${DEFAULT_URL}${url}`, {
       method: "POST",
       headers: {
@@ -114,17 +100,11 @@ const useReadUser = (filters: any) => {
 };
 
 const useReadOneUser = (filters: any) => {
-    
-  const [idToken, setIdToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    getIdToken().then((idToken : string) => {
-      setIdToken(idToken);
-    });
-  }, []);
 
 
-      const fetcher = async (url: string) => {
+  const fetcher = async (url: string) => {
+        const idToken = await getIdToken();
+
         const response = await fetch(`${DEFAULT_URL}${url}`, {
           method: 'POST',
           headers: {

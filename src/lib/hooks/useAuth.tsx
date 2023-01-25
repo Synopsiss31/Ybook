@@ -8,10 +8,6 @@ const useAuth = () => {
 
   const { setSession, clearSession } = useSessionCtx();
   
-   
-  useEffect(() => {
-    console.log('useAuth useEffect');
-  }, []);
 
   const login = async ({
     email,

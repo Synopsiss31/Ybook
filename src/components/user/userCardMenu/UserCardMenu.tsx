@@ -8,6 +8,8 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Box, MenuItem } from "@mui/material";
+import error from "next/error";
+import { useEffect } from "react";
 import { toast } from "react-hot-toast";
 
 const MyAccountMenu = () => {
@@ -110,19 +112,25 @@ const OtherUserMenu = ({ isFriend }: {
 const UserCardMenu = ({ userId }: { userId?: number }) => {
 
   const { data: currentUser, error: errorC, isLoading: isLoadingC } = useGetCurrentUser();
-    const { session } = useSessionCtx();
+ 
+  const { session } = useSessionCtx();
+    const {
+      data: user,
+      error,
+      isLoading,
+    } = {
+      data: null,
+      error: null,
+      isLoading: false,
+    };
+ 
 
-
-  if (!userId) {
+  if (!userId || userId === currentUser?.id) {
     if (!session || !currentUser) return <MyAuthMenu />;
     return <MyAccountMenu />;
   }
 
-  const { data: user, error, isLoading } = {
-    data: null,
-    error: null,
-    isLoading: false
-  }
+
   //   useReadOneUser(
   //   {
   //     where: {
@@ -133,6 +141,8 @@ const UserCardMenu = ({ userId }: { userId?: number }) => {
     
   const areFriends = false; // TODO : check if user is friend of current user
   
+ 
+
 
   if (isLoading || isLoadingC) return (
     <>
@@ -141,7 +151,6 @@ const UserCardMenu = ({ userId }: { userId?: number }) => {
   );
   
   if (error || errorC) {
-    toast.error("Error while loading user data")
     // logout()
     return (
       <>
@@ -149,8 +158,6 @@ const UserCardMenu = ({ userId }: { userId?: number }) => {
       </>
     );
   }
-  
-
 
 
   return <OtherUserMenu isFriend={areFriends} />;
