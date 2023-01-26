@@ -1,5 +1,6 @@
-import { withColorMode } from '@/lib/contexts/ColorModeContext';
+import { ColorModeProvider, } from '@/lib/contexts/ColorModeContext';
 import { withSession } from '@/lib/contexts/SessionCtx';
+import { Box } from '@mui/material';
 import type { AppProps } from 'next/app';
 
 import "swiper/css";
@@ -12,7 +13,22 @@ const App : React.FC<AppProps> = ({
   Component,
   pageProps: { ...pageProps },
 }) =>{
-  return <Component {...pageProps} />;
+  return (
+    <ColorModeProvider>
+      <Box
+        sx={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "background.default",
+        }}
+      >
+        <Component {...pageProps} />
+      </Box>
+    </ColorModeProvider>
+  );
 }
 
-export default withSession(withColorMode(App));
+export default withSession(App);

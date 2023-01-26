@@ -18,22 +18,30 @@ const SessionCtx = createContext<SessionCtxType>({
 });
 
 const SessionCtxProvider: React.FC<React.PropsWithChildren<Record<string, unknown>>> = ({ children }) => {
+  const isLoad = React.useRef(false);
   const [session, setSession] = React.useState<ISession | null>(null);
 
   React.useEffect(() => {
-    if (!session) {
+    console.log('isLoad', isLoad.current)
+    if (!isLoad.current) {
+      isLoad.current = true;
       // check if session is in local storage
       const sessionStr = localStorage.getItem('session');
+      console.log('sessionStr', sessionStr)
       if (sessionStr) {
         const session = JSON.parse(sessionStr) as ISession;
         setSession(session);
       }
     }
-  }, [session]);
+    return () => {
+      isLoad.current = false;
+    }
+  }, []);
 
   React.useEffect(() => {
     if (session) {
       localStorage.setItem('session', JSON.stringify(session));
+      isLoad.current = true;
     } else {
       localStorage.removeItem('session');
     }

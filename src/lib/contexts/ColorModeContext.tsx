@@ -1,5 +1,12 @@
 import { createTheme, ThemeProvider } from "@mui/material";
-import { useState, createContext, useEffect, useMemo, useContext } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 const ColorModeContext = createContext({
   colorMode: "light",
@@ -10,29 +17,81 @@ const ColorModeContext = createContext({
 
 const ColorModeProvider = ({ children }: { children: React.ReactNode }) => {
   const [colorMode, setColorMode] = useState<"light" | "dark">("light");
+  const isMounted = useRef(false);
 
   useEffect(() => {
-    // get color mode from local storage
-    const localColorMode = localStorage.getItem("colorMode") as
-      | "light"
-      | "dark";
-    if (localColorMode) {
-      setColorMode(localColorMode);
+    if (isMounted.current) {
+      // get color mode from local storage
+      const localColorMode = localStorage.getItem("colorMode") as
+        | "light"
+        | "dark"
+        | null;
+      console.log("localColorMode", localColorMode);
+      if (localColorMode) {
+        setColorMode(localColorMode);
+      } else {
+        // set from system preference
+        const systemColorMode = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches
+          ? "dark"
+          : "light";
+        setColorMode(systemColorMode);
+      }
     } else {
-      // set from system preference
-      const systemColorMode = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
-        ? "dark"
-        : "light";
-      setColorMode(systemColorMode);
+      isMounted.current = true;
     }
   }, [setColorMode]);
 
   const theme = useMemo(
     () =>
       createTheme({
+        // if light : set white to #F7F7F7
+        // if light : primary.main to 2863b0
         palette: {
           mode: colorMode,
+
+          ...(colorMode === "light" && {
+            background: {
+              default: "#F7F7F7",
+              paper: "#F8F8F8",
+            },
+            primary: {
+              main: "#2863b0",
+            },
+          }),
+          ...(colorMode === "dark" && {
+            background: {
+              default: "#1F1F1F",
+              paper: "#1A1A1A",
+            },
+            primary: {
+              main: "#2863b0",
+            },
+          }),
+        },
+        components: {
+          // Typography color
+          MuiTypography: {
+            styleOverrides: {
+              root: {
+                color: colorMode === "light" ? "#1A1A1A" : "#F7F7F7",
+              },
+            },
+          },
+          MuiPaper: {
+            styleOverrides: {
+              root: {
+                borderRadius: 12,
+                ...(colorMode === "light" && {
+                  boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.1)",
+                }),
+                ...(colorMode === "dark" && {
+                  boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.5)",
+                }),
+              },
+            },
+          },
         },
       }),
     [colorMode]
@@ -40,16 +99,17 @@ const ColorModeProvider = ({ children }: { children: React.ReactNode }) => {
 
   const toggleColorMode = useMemo(
     () => () => {
+      console.log("toggleColorMode");
       setColorMode((prev) => (prev === "light" ? "dark" : "light"));
       // set color mode in local storage
+      localStorage.setItem(
+        "colorMode",
+        colorMode === "light" ? "dark" : "light"
+      );
       return;
     },
-    [setColorMode]
+    [colorMode]
   );
-
-  useEffect(() => {
-    localStorage.setItem("colorMode", colorMode);
-  }, [colorMode]);
 
   return (
     <ColorModeContext.Provider value={{ colorMode, toggleColorMode }}>
@@ -67,15 +127,5 @@ const useColorMode = () => {
   return context;
 };
 
-const withColorMode = <P extends object>(Component: React.ComponentType<P>) => {
-  return (props: any) => {
-    return (
-      <ColorModeProvider>
-        <Component {...props} />
-      </ColorModeProvider>
-    );
-  };
-};
 
-
-export { ColorModeProvider, useColorMode, withColorMode };
+export { ColorModeProvider, useColorMode };

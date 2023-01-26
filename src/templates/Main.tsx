@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import type { ReactNode } from 'react';
 
 
@@ -7,10 +8,22 @@ type IMainProps = {
 };
 
 const Main = (props: IMainProps) => (
-  <div className="w-full px-1 text-gray-700 antialiased">
+  <Box
+    sx={{
+      width: "100%",
+      height: "100%",
+    }}
+  >
     {props.meta}
-      <div className="content py-5 text-xl">{props.children}</div>
-  </div>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+      }}
+    >
+      {props.children}
+    </Box>
+  </Box>
 );
 
 export { Main };

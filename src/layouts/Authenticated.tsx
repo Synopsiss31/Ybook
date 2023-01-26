@@ -1,18 +1,18 @@
 import Authentication from '@/components/auth/Authentication';
+import BottomBar from '@/components/bottomBar/BottomBar';
 import TopBar from '@/components/topbar/TopBar';
 import { useSessionCtx } from '@/lib/contexts/SessionCtx';
 import { UserCtxProvider } from '@/lib/contexts/UserCtx';
-import useAuth from '@/lib/hooks/useAuth';
+import Grid from '@mui/system/Unstable_Grid';
 import React from 'react';
 import { Toaster } from 'react-hot-toast';
+
 interface IAuthenticatedProps {
   children: React.ReactNode;
 }
 
 const Authenticated: React.FC<IAuthenticatedProps> = ({ children }) => {
-
  
-  const { logout } = useAuth();
 
   const { session } = useSessionCtx();
   
@@ -24,24 +24,41 @@ const Authenticated: React.FC<IAuthenticatedProps> = ({ children }) => {
   return (
     <>
       <UserCtxProvider>
-        <TopBar />
-        <div className="flex flex-col min-h-screen">
-          <div className="flex flex-col flex-1">
-            <main className="flex-1">{children}</main>
-          </div>
-        </div>
+        <Grid
+          container
+          xs
+          direction="column"
+          sx={{
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          <Grid>
+            <TopBar />
+          </Grid>
+          <Grid
+            xs
+            sx={{
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            {children}
+          </Grid>
+          <Grid
+            sx={{
+              mt: "auto",
+            }}
+          >
+            <BottomBar />
+          </Grid>
+        </Grid>
+        <Toaster />
       </UserCtxProvider>
     </>
   );
 };
 
-function withToaster<P>(Component: React.ComponentType<P>) {
-  return (props: P) => (
-    <>
-      <Component {...props} />
-      <Toaster />
-    </>
-  );
-}
 
-export default withToaster(Authenticated);
+
+export default Authenticated;
