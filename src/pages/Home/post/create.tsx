@@ -58,7 +58,15 @@ const CreatePost = () => {
           throw new Error('An error occurred while posting the image.');
         }
 
-        console.log("response", response);        
+        //get the response code
+        console.log("response", response);
+        
+
+        // get the s3 key from the response
+        response.text().then((text) => {
+          console.log("text", text);
+        });
+        
 
       }} />
     </div>
