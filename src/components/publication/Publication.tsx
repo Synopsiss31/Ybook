@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import Comment from '@mui/icons-material/ChatBubbleOutline';
 import Like from '@mui/icons-material/FavoriteBorder';
-import { Button, Fade, IconButton } from '@mui/material';
+import { Box, Button, Fade, IconButton } from '@mui/material';
 import ActiveLike from '@mui/icons-material/FavoriteOutlined';
 import { useRef, useState } from 'react';
 import style from './publication.module.css';
@@ -21,7 +21,10 @@ function Publication() {
   return (
     <div className={style.post}>
       <div className={style.publiHead}>
-        <Image className={style.imgprof} src={imgpro} alt={''} />
+        <div className={style.imgheader}>
+          <Image className={style.imgprof} src={imgpro} alt={''} />
+        </div>
+
         <h1 className={style.namePro}>Synopsis</h1>
       </div>
       <div className={style.imgPost}>
@@ -121,4 +124,29 @@ function Publication() {
   );
 }
 
-export default Publication;
+const Def = () => {
+  // duplicate above random nb of yime
+
+  return (
+    <Box
+      sx={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}
+    >
+      {Array(Math.floor(Math.random() * 10) + 1)
+        .fill(0)
+        .map((_, index) => (
+          <Box key={index} sx={{ m: 2 }}>
+            <Publication />
+          </Box>
+        ))}
+    </Box>
+  );
+};
+
+export default Def;
