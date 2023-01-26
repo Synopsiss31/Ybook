@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=&Robotodisplay=swap');
+
+
+.post{
+  border: rgb(121, 121, 121) solid 1px;
+  border-radius: 10px;
+  width: 95vw;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.publiHead{
+  display: flex;
+  align-items: center;
+  height: 5%;
+  padding-left: 5px;
+}
+.imgprof{
+  border-radius: 50%;
+  height: 80%;
+  width: auto;
+  overflow: hidden;
+}
+.img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.imgPost{
+  background-color: black;
+  height: 70%;
+}
+
+.namePro{
+  font-family: 'Roboto', sans-serif;
+  padding-left: 8px;
+  font-size: 15px;
+}
+
+.interact{
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.interactbutton{
+  display: flex;
+  flex-direction: row;
+}
+
+.buttonlike{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.nblike{
+  font-family: 'Roboto', sans-serif;
+}
+
+.buttoncomment{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.comment{
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.inputcomment{
+  all:unset;
+  width: 95%;
+  border: 0;
+  height: 30px;
+  padding-left: 7px;
+  border-radius: 10px;
+}
+
+.publidesc{
+  padding-bottom: 6px;
+  display: flex;
+  flex-direction: row;
+  padding-left: 7px;
+  border-bottom: rgb(196, 196, 196) solid 1px;
+}
+
+.description{
+  font-size: 15px;
+}
+
+.usernamedesc{
+  margin-right: 7px;
+  font-family: 'Roboto', sans-serif;
+  font-weight:bold;
+  text-transform: lowercase;
+  text-transform: capitalize;
+  font-size: 15px;
+}
+
+
+.rowComment{
+  display: flex;
+  flex-direction: row;
+}
+
+.bottomComment{
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+  border-top: rgb(196, 196, 196) solid 1px;
+
+}
+
+/* .buttonpost{
+  width: 20%;
+  border: none;
+  background-color: white;
+  border-bottom-right-radius: 10px;
+  font-size: 14px;
+  color: rgb(43, 43, 214);
+  font-weight:bold;
+} */
+
+.buttonpost{
+  border: none;
+  text-transform: lowercase;
+  text-transform: capitalize;
+  font-weight:bold;
+}
+
+.fullWidth{
+  width: 100%;
+}
+
+.listcom{
+  margin-top: 4px;
+  margin-left: 10px;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+}
+
+.comcontent{
+  margin-bottom: 5px;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 6px;
+}
+
+.username{
+  margin-right: 7px;
+  font-family: 'Roboto', sans-serif;
+  font-weight:bold;
+  text-transform: lowercase;
+  text-transform: capitalize;
+  font-size: 13px;
+}
+
+.com{
+  font-family: 'Roboto', sans-serif;
+  font-size: 13px;
+}
+
+
+
+
