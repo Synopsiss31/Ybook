@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { UserCreation } from '../models/UserCreation';
+import type { UserUpdate } from '../models/UserUpdate';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -27,14 +28,14 @@ requestBody?: UserCreation,
     }
 
     /**
-     * Get the current user
+     * Get all the users
      * @returns any Success
      * @throws ApiError
      */
-    public static userCtrlGetCurrentUser(): CancelablePromise<any> {
+    public static userCtrlReadAll(): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/rest/users/me',
+            url: '/rest/users/read',
         });
     }
 
@@ -56,17 +57,29 @@ requestBody?: any,
     }
 
     /**
-     * Get one user
+     * Get the current user
+     * @returns any Success
+     * @throws ApiError
+     */
+    public static userCtrlGetCurrentUser(): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/rest/users/me',
+        });
+    }
+
+    /**
+     * Patches the current user
      * @param requestBody 
      * @returns any Success
      * @throws ApiError
      */
-    public static userCtrlReadOneFiltered(
-requestBody?: any,
+    public static userCtrlUdpateCurrentUser(
+requestBody?: UserUpdate,
 ): CancelablePromise<any> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/rest/users/readOne',
+            method: 'PATCH',
+            url: '/rest/users/me',
             body: requestBody,
             mediaType: 'application/json',
         });

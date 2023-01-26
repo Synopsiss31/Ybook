@@ -34,7 +34,6 @@
 }
 
 .imgPost{
-  background-color: black;
   height: 70%;
 }
 
@@ -124,15 +123,6 @@
 
 }
 
-/* .buttonpost{
-  width: 20%;
-  border: none;
-  background-color: white;
-  border-bottom-right-radius: 10px;
-  font-size: 14px;
-  color: rgb(43, 43, 214);
-  font-weight:bold;
-} */
 
 .buttonpost{
   border: none;

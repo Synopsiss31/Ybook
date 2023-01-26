@@ -1,13 +1,13 @@
 // eslint-disable-next-line import/no-named-as-default
+import Authenticated from '@/layouts/Authenticated';
 import { Fabutton } from '../components/fabutton/Fabutton';
 import Publication from '../components/publication/Publication';
 
 function publi() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <Authenticated>
       <Publication />
-      <Fabutton />
-    </div>
+    </Authenticated>
   );
 }
 

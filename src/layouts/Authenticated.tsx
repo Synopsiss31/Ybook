@@ -32,6 +32,7 @@ const Authenticated: React.FC<IAuthenticatedProps> = ({ children }) => {
             width: "100%",
             height: "100%",
           }}
+          wrap="nowrap"
         >
           <Grid>
             <TopBar />
@@ -41,6 +42,7 @@ const Authenticated: React.FC<IAuthenticatedProps> = ({ children }) => {
             sx={{
               width: "100%",
               height: "100%",
+              overflow: "hidden ",
             }}
           >
             {children}

@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import Comment from '@mui/icons-material/ChatBubbleOutline';
 import Like from '@mui/icons-material/FavoriteBorder';
-import { Box, Button, Fade, IconButton } from '@mui/material';
+import { Box, Button, Fade, IconButton, TextField, Typography } from '@mui/material';
 import ActiveLike from '@mui/icons-material/FavoriteOutlined';
 import { useRef, useState } from 'react';
 import style from './publication.module.css';
@@ -19,92 +19,138 @@ function Publication() {
   const [isLike, setIsLike] = useState(false);
 
   return (
-    <div className={style.post}>
-      <div className={style.publiHead}>
-        <div className={style.imgheader}>
-          <Image className={style.imgprof} src={imgpro} alt={''} />
-        </div>
+    <Box className={style.post}>
+      <Box className={style.publiHead}>
+        <Box className={style.imgheader}>
+          <Image className={style.imgprof} src={imgpro} alt={""} />
+        </Box>
 
-        <h1 className={style.namePro}>Synopsis</h1>
-      </div>
-      <div className={style.imgPost}>
+        <Typography component="h1" className={style.namePro}>
+          Synopsis
+        </Typography>
+      </Box>
+      <Box className={style.imgPost}>
         <Image className={style.img} src={img} alt="img" />
-      </div>
-      <div className={style.interact}>
-        <div className={style.interactbutton}>
-          <div className={style.buttonlike}>
+      </Box>
+      <Box className={style.interact}>
+        <Box className={style.interactbutton}>
+          <Box className={style.buttonlike}>
             <IconButton
               className={style.button}
               onClick={() => setIsLike((previous) => !previous)}
-              sx={{ position: 'relative', m: 1 }}
+              sx={{ position: "relative", m: 1 }}
             >
               <Fade in={isLike} timeout={300}>
-                <ActiveLike color="error" sx={{ position: 'absolute' }} />
+                <ActiveLike color="error" sx={{ position: "absolute" }} />
               </Fade>
               <Fade in={!isLike} timeout={300}>
-                <Like sx={{ position: 'absolute' }} />
+                <Like sx={{ position: "absolute" }} />
               </Fade>
             </IconButton>
-            <span className={style.nblike}>1076</span>
-          </div>
-          <div className={style.buttoncomment}>
+            <Typography component="span" className={style.nblike}>
+              1076
+            </Typography>
+          </Box>
+          <Box className={style.buttoncomment}>
             <IconButton className={style.button}>
               <Comment />
             </IconButton>
-            <span className={style.nblike}>18</span>
-          </div>
-        </div>
-      </div>
-      <div className={style.publidesc}>
-        <div className={style.usernamedesc}>Synopsis</div>
-        <div className={style.description}>
-          Voila une photo de mon super setup !
-        </div>
-      </div>
-      <div className={style.listcom}>
-        <div className={style.comcontent}>
-          <span className={style.username}>Synopsis </span>
-          <span className={style.com}>
+            <Typography component="span" className={style.nblike}>
+              18
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+      <Box className={style.publidesc}>
+        <Box className={style.usernamedesc}>
+          <Typography component="span" className={style.name}>
+            Synopsis
+          </Typography>
+        </Box>
+        <Box className={style.description}>
+          <Typography component="span" className={style.desc}>
+            Voila une photo de mon super setup !
+            </Typography>
+        </Box>
+      </Box>
+      <Box className={style.listcom}>
+        <Box className={style.comcontent}>
+          <Typography component="span" className={style.username}>
+            Synopsis
+          </Typography>
+          <Typography component="span" className={style.com}>
             Salut ! Super setup je veux le même chien !
-          </span>
-        </div>
-        <div className={style.comcontent}>
-          <span className={style.username}>Micka </span>
-          <span className={style.com}>Styléééé</span>
-        </div>
-        <div className={style.comcontent}>
-          <span className={style.username}>UnderDog</span>
-          <span className={style.com}>je suis un professional</span>
-        </div>
-        <div className={style.comcontent}>
-          <span className={style.username}>Mohcine</span>
-          <span className={style.com}>degage sahbi</span>
-        </div>
-        <div className={style.comcontent}>
-          <span className={style.username}>michel</span>
-          <span className={style.com}>comment ouvrir google ?</span>
-        </div>
-        <div className={style.comcontent}>
-          <span className={style.username}>chien</span>
-          <span className={style.com}>kelb</span>
-        </div>
-        <div className={style.comcontent}>
-          <span className={style.username}>bisous</span>
-          <span className={style.com}>non mais imagines</span>
-        </div>
-        <div className={style.comcontent}>
-          <span className={style.username}>Synopsis</span>
-          <span className={style.com}>ca fou quoi ?</span>
-        </div>
-        <div className={style.comcontent}>
-          <span className={style.username}>simon</span>
-          <span className={style.com}>bonjour</span>
-        </div>
-      </div>
-      <div className={style.bottomComment}>
-        <div className={style.rowComment}>
-          <div className={style.fullWidth}>
-            <input
+          </Typography>
+        </Box>
+        <Box className={style.comcontent}>
+          <Typography component="span" className={style.username}>
+            Micka{" "}
+          </Typography>
+          <Typography component="span" className={style.com}>
+            Styléééé
+          </Typography>
+        </Box>
+        <Box className={style.comcontent}>
+          <Typography component="span" className={style.username}>
+            UnderDog
+          </Typography>
+          <Typography component="span" className={style.com}>
+            je suis un professional
+          </Typography>
+        </Box>
+        <Box className={style.comcontent}>
+          <Typography component="span" className={style.username}>
+            Mohcine
+          </Typography>
+          <Typography component="span" className={style.com}>
+            degage sahbi
+          </Typography>
+        </Box>
+        <Box className={style.comcontent}>
+          <Typography component="span" className={style.username}>
+            michel
+          </Typography>
+          <Typography component="span" className={style.com}>
+            comment ouvrir google ?
+          </Typography>
+        </Box>
+        <Box className={style.comcontent}>
+          <Typography component="span" className={style.username}>
+            chien
+          </Typography>
+          <Typography component="span" className={style.com}>
+            kelb
+          </Typography>
+        </Box>
+        <Box className={style.comcontent}>
+          <Typography component="span" className={style.username}>
+            bisous
+          </Typography>
+          <Typography component="span" className={style.com}>
+            non mais imagines
+          </Typography>
+        </Box>
+        <Box className={style.comcontent}>
+          <Typography component="span" className={style.username}>
+            Synopsis
+          </Typography>
+          <Typography component="span" className={style.com}>
+            ca fou quoi ?
+          </Typography>
+        </Box>
+        <Box className={style.comcontent}>
+          <Typography component="span" className={style.username}>
+            simon
+          </Typography>
+          <Typography component="span" className={style.com}>
+            bonjour
+          </Typography>
+        </Box>
+      </Box>
+      <Box className={style.bottomComment}>
+        <Box className={style.rowComment}>
+          <Box className={style.fullWidth}>
+            <TextField
               ref={inputRef}
               onFocusCapture={appear}
               onBlurCapture={appear}
@@ -112,15 +158,15 @@ function Publication() {
               type="text"
               placeholder="Ecrivez un commentaire ..."
             />
-          </div>
+          </Box>
           <Fade in={isShown} timeout={150}>
             <Button sx={{}} variant="outlined" className={style.buttonpost}>
               Publier
             </Button>
           </Fade>
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 
@@ -136,6 +182,7 @@ const Def = () => {
         flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'center',
+        overflowY: 'scroll',
       }}
     >
       {Array(Math.floor(Math.random() * 10) + 1)

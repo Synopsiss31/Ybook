@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
+import { minWidth } from "@mui/system";
 import { Swiper,  SwiperSlide } from "swiper/react";
 import AuthSwitch from "./AuthSwitch";
 import ConfirmUser from "./ConfirmUser";
@@ -35,7 +36,8 @@ const Authentication = () => {
           allowTouchMove={false}                              
           style={{
             height: "80%",
-            width: "34%"
+            width: "34%",
+            minWidth: "300px",
           }}
         >
           <AuthSwitch slot="container-start" />

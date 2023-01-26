@@ -71,7 +71,7 @@ const ColorModeProvider = ({ children }: { children: React.ReactNode }) => {
           }),
         },
         components: {
-          // Typography color
+          // Box color override
           MuiTypography: {
             styleOverrides: {
               root: {

@@ -2,7 +2,7 @@ import { getIdToken } from '@/lib/utils/cognito';
 import { UserModel } from '@/types/models';
 import useSWR from 'swr';
 
-const DEFAULT_URL = process.env.NEXT_PUBLIC_API_URL;
+export const DEFAULT_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const useCreateUser = (user: UserCreation) => {
 
