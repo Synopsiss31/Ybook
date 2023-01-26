@@ -36,7 +36,7 @@ function Publication() {
               sx={{ position: 'relative', m: 1 }}
             >
               <Fade in={isLike} timeout={300}>
-                <ActiveLike sx={{ position: 'absolute' }} />
+                <ActiveLike color="error" sx={{ position: 'absolute' }} />
               </Fade>
               <Fade in={!isLike} timeout={300}>
                 <Like sx={{ position: 'absolute' }} />
