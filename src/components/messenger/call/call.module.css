@@ -1,0 +1,53 @@
+.div8 {
+    width: 15vw;
+    height: 15vw;
+    border-radius: 50%;
+}
+
+.div1 {
+    display: flex;
+    padding: 3vw 0;
+    width: 95%;
+    margin: auto;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.div2 {
+    flex-grow: 1;
+    padding: 0 4vw;
+}
+
+.div3 {
+    font-size: 6vw;
+    font-weight: 700;
+    padding: 2vw 0
+}
+
+.div4 {
+    display: flex;
+}
+
+.div5 {
+    display: flex;
+    font-size: 5vw;
+    color: #5E8EF7;
+}
+
+.div9 {
+    padding: 0 1.7vw;
+}
+
+.icon {
+    width: 4vw;
+    height: 4vw;
+}
+
+.icon2 {
+    width: 3vw;
+    height: 3vw;
+}
+
+.missed {
+    border: 2px solid red;
+}

@@ -1,0 +1,30 @@
+[
+    {
+        "name": "Mom",
+        "message": "ji o jib m3ak lkhobz",
+        "time": "20:02",
+        "unreadMessages": "1",
+        "profilePhoto": "3"
+    },
+    {
+        "name": "Sophie",
+        "message": "Calling you later !",
+        "time": "18:53",
+        "unreadMessages": "7",
+        "profilePhoto": "2"
+    },
+    {
+        "name": "Adam",
+        "message": "Yes, Sure 😃",
+        "time": "17:59",
+        "unreadMessages": "4",
+        "profilePhoto": "1"
+    },
+    {
+        "name": "Loic",
+        "message": "That's cool !",
+        "time": "15:30",
+        "unreadMessages": "1",
+        "profilePhoto": "4"
+    }
+]

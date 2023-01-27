@@ -1,0 +1,66 @@
+[
+    {
+        "name": "Lofi",
+        "time": "14:20",
+        "day": "26 Janvier 2023",
+        "profilePhoto": "5",
+        "callType": "audio",
+        "missed": true
+    },
+    {
+        "name": "Mary",
+        "time": "15:53",
+        "day": "25 Janvier 2023",
+        "profilePhoto": "6",
+        "callType": "video",
+        "missed": true
+    },
+    {
+        "name": "Raphael",
+        "time": "13:59",
+        "day": "24 Janvier 2023",
+        "profilePhoto": "7",
+        "callType": "video",
+        "missed": true
+    },
+    {
+        "name": "Thomas",
+        "time": "15:30",
+        "day": "23 Decembre 2022",
+        "profilePhoto": "8",
+        "callType": "video",
+        "missed": false
+    },
+    {
+        "name": "Mom",
+        "time": "20:02",
+        "day": "25 Janvier 2023",
+        "profilePhoto": "3",
+        "callType": "video",
+        "missed": true
+    },
+    {
+        "name": "Sophie",
+        "time": "18:53",
+        "day": "29 Janvier 2023",
+        "profilePhoto": "2",
+        "callType": "audio",
+        "missed": false
+    },
+    {
+        "name": "Adam",
+        "time": "17:59",
+        "day": "20 Janvier 2023",
+        "profilePhoto": "1",
+        "callType": "audio",
+        "missed": true
+    },
+    {
+        "name": "Loic",
+        "time": "15:30",
+        "day": "31 Decembre 2022",
+        "profilePhoto": "4",
+        "callType": "video",
+        "missed": false
+    }
+]

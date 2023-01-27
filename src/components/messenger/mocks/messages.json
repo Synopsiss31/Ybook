@@ -1,0 +1,22 @@
+[
+    {
+        "from": "Jhon",
+        "content": "Hello",
+        "createdAt": "20:02"
+    },
+    {
+        "from": "Mohcine",
+        "content": "Hi !",
+        "createdAt": "20:03"
+    },
+    {
+        "from": "Jhon",
+        "content": "How are you 😃",
+        "createdAt": "20:04"
+    },
+    {
+        "from": "Mohcine",
+        "content": "Great ! and you ?Great ! and you ?Great ! and you ?Great ! and you ?",
+        "createdAt": "20:05"
+    }
+]
