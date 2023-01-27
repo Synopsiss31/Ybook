@@ -8,7 +8,11 @@ class MyDocument extends Document {
   render() {
     return (
       <Html lang={AppConfig.locale}>
-        <Head />
+        <Head>
+          <link href="https://fonts.googleapis.com/css2?family=Sofia+Sans&display=swap" rel="stylesheet" />
+          <script src="https://kit.fontawesome.com/7d7b8cb9f6.js" crossOrigin="anonymous"></script>
+        </Head>
+        
         <body>
           <Main />
           <NextScript />

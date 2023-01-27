@@ -40,5 +40,9 @@
     "titleBar.inactiveBackground": "#07643099",
     "titleBar.inactiveForeground": "#e7e7e799"
   },
-  "peacock.color": "#076430"
+  "peacock.color": "#076430",
+  "workbench.colorTheme": "Abyss",
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  }
 }
