@@ -39,6 +39,7 @@ const useGetCurrentUser = () => {
     const idToken = await getIdToken();
 
     console.log("idToken", idToken);
+    console.log(DEFAULT_URL+url);
 
     const response = await fetch(`${DEFAULT_URL}${url}`, {
       method: 'GET',
