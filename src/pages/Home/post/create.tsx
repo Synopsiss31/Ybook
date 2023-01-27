@@ -10,8 +10,9 @@ import useSWR from 'swr';
 
 const CreatePost = () => {
 
-  // const fetcher = async (url: string) => {
-  //   console.log("idToken", idToken)
+  const fetcher = async (url: string) => {
+    const idToken = await getIdToken();
+    console.log("idToken", idToken)
 
     const response = await fetch(`${DEFAULT_URL}${url}`, {
       method: "POST",
@@ -30,8 +31,6 @@ const CreatePost = () => {
   }
 
 
-  //   return response.text();
-  // }
 
     const {data, error, isLoading} = useSWR<{url:string,s3Key:string,fileID:string}>(`/post/url`, fetcher, {revalidateOnFocus: false,});
 
