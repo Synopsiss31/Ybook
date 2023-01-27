@@ -1,7 +1,9 @@
 // send an image on s3
 
+import Authenticated from "@/layouts/Authenticated";
 import { DEFAULT_URL } from "@/lib/hooks/API/users/useAPIUser";
 import { getIdToken } from "@/lib/utils/cognito";
+import { Box, Typography } from "@mui/material";
 import useSWR from 'swr';
 
 
@@ -12,64 +14,60 @@ const CreatePost = () => {
     console.log("idToken", idToken)
 
     const response = await fetch(`${DEFAULT_URL}${url}`, {
-      method: 'GET',
+      method: "POST",
       headers: {
-        'Content-Type': 'text/plain',
-        'Authorization': `Bearer ${idToken}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
       },
+      body: JSON.stringify({
+        name: "test",
+        type: "image/png",
+        size: 1336186,
+      }),
     });
 
-    if (!response.ok) {
-      throw new Error('An error occurred while fetching the user.');
-    }
-
-    return response.text();
+    return response.json();
   }
 
 
 
-    const {data, error, isLoading} = useSWR<string>(`/post/url`, fetcher, {revalidateOnFocus: false,});
+    const {data, error, isLoading} = useSWR<{url:string,s3Key:string,fileID:string}>(`/post/url`, fetcher, {revalidateOnFocus: false,});
 
-    if (error) {
-      console.log("error", error);
-      return <div>failed to load</div>;
-    }
 
-    if (isLoading) {
-      return <div>loading...</div>;
-    }
-  
+  if (isLoading) return <Typography variant="h1">Loading...</Typography>;
+
+  if (error) return <Typography variant="h1">Error</Typography>;
+    
   return (
-    <div>
-      <h1>Create Post</h1>
-      <input type="file" onChange={async (e) => {
-        const file = e.target.files![0];
-        const formData = new FormData();
-        if (!file) return;
-        if(!data) return;
-        formData.append('file', file);
-        const response = await fetch(data, {
-          method: 'PUT',
-          body: formData
-        });
-        if (!response.ok) {
-          //log the error
-          console.log("error", response);
-          throw new Error('An error occurred while posting the image.');
-        }
-
-        //get the response code
-        console.log("response", response);
-        
-
-        // get the s3 key from the response
-        response.text().then((text) => {
-          console.log("text", text);
-        });
-        
-
-      }} />
-    </div>
+    <Authenticated>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h4">Create Post</Typography>
+        <input
+          type="file"
+          onChange={async (e) => {
+            const file = e.target.files![0];
+            if (!file) return;
+            if (!data) return;
+            const response = await fetch(data.url, {
+              method: "PUT",
+              body: file,
+            });
+            if (!response.ok) {
+              //log the error
+              console.log("error", response);
+              throw new Error("An error occurred while posting the image.");
+            }
+            console.log("fileID", data.fileID);
+          }}
+        />
+      </Box>
+    </Authenticated>
   );
 };
 
