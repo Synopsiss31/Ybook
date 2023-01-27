@@ -1,14 +1,22 @@
-import { useAppContext,Pages } from "@/lib/contexts/AppContext";
-import { BottomNavigation, BottomNavigationAction, Box, Divider, Fab } from '@mui/material';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import SettingsIcon from '@mui/icons-material/Settings';
-import HomeIcon from "@mui/icons-material/Home";
-import ChatIcon from "@mui/icons-material/Chat";
+import { Pages, useAppContext } from "@/lib/contexts/AppContext";
 import { AddTwoTone } from "@mui/icons-material";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ChatIcon from "@mui/icons-material/Chat";
+import HomeIcon from "@mui/icons-material/Home";
+import SettingsIcon from '@mui/icons-material/Settings';
+import { BottomNavigation, BottomNavigationAction, Box, Fab } from '@mui/material';
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 
 const BottomBar = () => {
-  const { state,dispatch } = useAppContext();
+  const { state, dispatch } = useAppContext();
+  const router = useRouter();
+  
+  useEffect(() => {
+    router.push(state.page.path);
+  }, [state]);
+  
 
   return (
     <Box>

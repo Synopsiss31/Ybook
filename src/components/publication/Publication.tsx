@@ -1,178 +1,174 @@
 // eslint-disable-next-line simple-import-sort/imports
-import Image from 'next/image';
 import Comment from '@mui/icons-material/ChatBubbleOutline';
 import Like from '@mui/icons-material/FavoriteBorder';
-import { Box, Button, Fade, IconButton, TextField, Typography } from '@mui/material';
 import ActiveLike from '@mui/icons-material/FavoriteOutlined';
-import { useRef, useState } from 'react';
-import style from './publication.module.css';
-
-import img from './imgpubli.png';
-import imgpro from './profilimg.jpeg';
+import { Box, Divider, Fade, IconButton, Paper, Typography } from '@mui/material';
+import Grid from "@mui/material/Unstable_Grid2";
+import { useState } from 'react';
+import Editor from '../editor/Editor';
+import GetImage from '../image/get';
 
 function Publication() {
-  const [isShown, setIsShown] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const appear = () => {
-    setIsShown((old) => !old);
-  };
+
   const [isLike, setIsLike] = useState(false);
 
-  return (
-    <Box className={style.post}>
-      <Box className={style.publiHead}>
-        <Box className={style.imgheader}>
-          <Image className={style.imgprof} src={imgpro} alt={""} />
-        </Box>
+  const [displayComment, setDisplayComment] = useState(false);
+  
+  const username = "Moi";
 
-        <Typography component="h1" className={style.namePro}>
-          Synopsis
-        </Typography>
-      </Box>
-      <Box className={style.imgPost}>
-        <Image className={style.img} src={img} alt="img" />
-      </Box>
-      <Box className={style.interact}>
-        <Box className={style.interactbutton}>
-          <Box className={style.buttonlike}>
-            <IconButton
-              className={style.button}
-              onClick={() => setIsLike((previous) => !previous)}
-              sx={{ position: "relative", m: 1 }}
+  const nbLike = 1076;
+
+  const nbComment = 18;
+
+  const description = "Voila une photo de mon super setup !";
+
+  const toggleComment = () => {
+    setDisplayComment((previous) => !previous);
+  };
+
+
+  return (
+    <Paper>
+      <Grid container direction="column" spacing={2}>
+        <Grid
+          container
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-around",
+          }}
+        >
+          <Grid
+            sx={{
+              maxHeight: 60,
+              mx: 3,
+              mt: 1,
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Paper
+              sx={{
+                width: 50,
+                height: 50,
+                borderRadius: "50%",
+                overflow: "hidden",
+              }}
             >
-              <Fade in={isLike} timeout={300}>
-                <ActiveLike color="error" sx={{ position: "absolute" }} />
-              </Fade>
-              <Fade in={!isLike} timeout={300}>
-                <Like sx={{ position: "absolute" }} />
-              </Fade>
-            </IconButton>
-            <Typography component="span" className={style.nblike}>
-              1076
+              <GetImage
+                fileID="a36de206-50dc-4e10-ab49-fad8b3e1b7b1"
+                width={50}
+                height={50}
+              />
+            </Paper>
+          </Grid>
+          <Grid
+            xs
+            sx={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Typography
+              component="h1"
+              sx={{
+                fontWeight: "bold",
+                fontSize: "1.2rem",
+              }}
+            >
+              @{username}
             </Typography>
-          </Box>
-          <Box className={style.buttoncomment}>
-            <IconButton className={style.button}>
-              <Comment />
-            </IconButton>
-            <Typography component="span" className={style.nblike}>
-              18
+          </Grid>
+        </Grid>
+        <Grid xs>
+          <GetImage fileID="a36de206-50dc-4e10-ab49-fad8b3e1b7b1" />
+        </Grid>
+        <Grid container xs sx={{}}>
+          <Grid
+            xs={6}
+            container
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-evenly",
+            }}
+            wrap="nowrap"
+          >
+            <Grid
+              xs
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <IconButton
+                onClick={() => setIsLike((previous) => !previous)}
+                sx={{ position: "relative", m: 1 }}
+              >
+                <Fade in={isLike} timeout={300}>
+                  <ActiveLike color="error" sx={{ position: "absolute" }} />
+                </Fade>
+                <Fade in={!isLike} timeout={300}>
+                  <Like sx={{ position: "absolute" }} />
+                </Fade>
+              </IconButton>
+              <Typography component="span">
+                {isLike ? nbLike + 1 : nbLike}
+              </Typography>
+            </Grid>
+            <Grid
+              xs
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+                <Comment />
+              <Typography component="span">{nbComment}</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid
+          xs
+          container
+          direction="column"
+          sx={{
+            px: 2,
+          }}
+        >
+          <Grid xs>
+            <Typography
+              component="span"
+              sx={{
+                fontWeight: "bold",
+                fontSize: "1.2rem",
+              }}
+            >
+              @{username}
             </Typography>
-          </Box>
-        </Box>
-      </Box>
-      <Box className={style.publidesc}>
-        <Box className={style.usernamedesc}>
-          <Typography component="span" className={style.name}>
-            Synopsis
-          </Typography>
-        </Box>
-        <Box className={style.description}>
-          <Typography component="span" className={style.desc}>
-            Voila une photo de mon super setup !
-            </Typography>
-        </Box>
-      </Box>
-      <Box className={style.listcom}>
-        <Box className={style.comcontent}>
-          <Typography component="span" className={style.username}>
-            Synopsis
-          </Typography>
-          <Typography component="span" className={style.com}>
-            Salut ! Super setup je veux le même chien !
-          </Typography>
-        </Box>
-        <Box className={style.comcontent}>
-          <Typography component="span" className={style.username}>
-            Micka{" "}
-          </Typography>
-          <Typography component="span" className={style.com}>
-            Styléééé
-          </Typography>
-        </Box>
-        <Box className={style.comcontent}>
-          <Typography component="span" className={style.username}>
-            UnderDog
-          </Typography>
-          <Typography component="span" className={style.com}>
-            je suis un professional
-          </Typography>
-        </Box>
-        <Box className={style.comcontent}>
-          <Typography component="span" className={style.username}>
-            Mohcine
-          </Typography>
-          <Typography component="span" className={style.com}>
-            degage sahbi
-          </Typography>
-        </Box>
-        <Box className={style.comcontent}>
-          <Typography component="span" className={style.username}>
-            michel
-          </Typography>
-          <Typography component="span" className={style.com}>
-            comment ouvrir google ?
-          </Typography>
-        </Box>
-        <Box className={style.comcontent}>
-          <Typography component="span" className={style.username}>
-            chien
-          </Typography>
-          <Typography component="span" className={style.com}>
-            kelb
-          </Typography>
-        </Box>
-        <Box className={style.comcontent}>
-          <Typography component="span" className={style.username}>
-            bisous
-          </Typography>
-          <Typography component="span" className={style.com}>
-            non mais imagines
-          </Typography>
-        </Box>
-        <Box className={style.comcontent}>
-          <Typography component="span" className={style.username}>
-            Synopsis
-          </Typography>
-          <Typography component="span" className={style.com}>
-            ca fou quoi ?
-          </Typography>
-        </Box>
-        <Box className={style.comcontent}>
-          <Typography component="span" className={style.username}>
-            simon
-          </Typography>
-          <Typography component="span" className={style.com}>
-            bonjour
-          </Typography>
-        </Box>
-      </Box>
-      <Box className={style.bottomComment}>
-        <Box className={style.rowComment}>
-          <Box className={style.fullWidth}>
-            <TextField
-              ref={inputRef}
-              onFocusCapture={appear}
-              onBlurCapture={appear}
-              className={style.inputcomment}
-              type="text"
-              placeholder="Ecrivez un commentaire ..."
-            />
-          </Box>
-          <Fade in={isShown} timeout={150}>
-            <Button sx={{}} variant="outlined" className={style.buttonpost}>
-              Publier
-            </Button>
-          </Fade>
-        </Box>
-      </Box>
-    </Box>
+          </Grid>
+          <Grid xs>
+            <Typography component="span">{description}</Typography>
+          </Grid>
+        </Grid>
+        <Fade in={displayComment} timeout={300} unmountOnExit>
+          <Grid xs>
+            <Divider />
+            <Grid>
+              <Grid>
+                <Grid>
+                  <Editor />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Fade>
+      </Grid>
+    </Paper>
   );
 }
 
 const Def = () => {
-  // duplicate above random nb of yime
-
   return (
     <Box
       sx={{

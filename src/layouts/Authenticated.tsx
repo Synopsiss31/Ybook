@@ -1,6 +1,7 @@
 import Authentication from '@/components/auth/Authentication';
 import BottomBar from '@/components/bottomBar/BottomBar';
 import TopBar from '@/components/topbar/TopBar';
+import { AppContextProvider } from '@/lib/contexts/AppContext';
 import { useSessionCtx } from '@/lib/contexts/SessionCtx';
 import { UserCtxProvider } from '@/lib/contexts/UserCtx';
 import Grid from '@mui/system/Unstable_Grid';
@@ -24,6 +25,7 @@ const Authenticated: React.FC<IAuthenticatedProps> = ({ children }) => {
   return (
     <>
       <UserCtxProvider>
+        <AppContextProvider>
         <Grid
           container
           xs
@@ -55,7 +57,8 @@ const Authenticated: React.FC<IAuthenticatedProps> = ({ children }) => {
             <BottomBar />
           </Grid>
         </Grid>
-        <Toaster />
+          <Toaster />
+        </AppContextProvider>
       </UserCtxProvider>
     </>
   );

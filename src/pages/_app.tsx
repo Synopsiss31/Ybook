@@ -1,4 +1,5 @@
-import { ColorModeProvider, } from '@/lib/contexts/ColorModeContext';
+import Authenticated from '@/layouts/Authenticated';
+import { ColorModeProvider } from '@/lib/contexts/ColorModeContext';
 import { withSession } from '@/lib/contexts/SessionCtx';
 import { Box } from '@mui/material';
 import type { AppProps } from 'next/app';
@@ -25,7 +26,9 @@ const App : React.FC<AppProps> = ({
           backgroundColor: "background.default",
         }}
       >
-        <Component {...pageProps} />
+        <Authenticated>
+          <Component {...pageProps} />
+        </Authenticated>
       </Box>
     </ColorModeProvider>
   );

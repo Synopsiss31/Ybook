@@ -1,17 +1,38 @@
 import { createContext, useContext, useReducer } from "react";
 
+interface IPage {
+  name: string;
+  path: string;
+  value: number;
+}
 
 export const Pages = {
-  Home: 0,
-  Profile: 1,
-  Chat:3,
-  Settings: 3,
+  Home: {
+    name: "Home",
+    path: "/",
+    value: 0,
+  },
+  Profile: {
+    name: "Profile",
+    path: "/profile",
+    value: 1,
+  },
+  Chat: {
+    name: "Chat",
+    path: "/chat",
+    value: 2,
+  },
+  Settings: {
+    name: "Settings",
+    path: "/settings",
+    value: 3,
+  },
   //...
-}
+} 
 
 
 interface IState {
-  page: number;
+  page: IPage;
 }
 
 interface IAction {

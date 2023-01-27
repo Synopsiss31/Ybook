@@ -1,14 +1,12 @@
 // send an image on s3
 
-import Authenticated from "@/layouts/Authenticated";
 import { DEFAULT_URL } from "@/lib/hooks/API/users/useAPIUser";
 import { getIdToken } from "@/lib/utils/cognito";
 import { Box, Typography } from "@mui/material";
-import { url } from "inspector";
 import useSWR from 'swr';
 
 
-const CreatePost = () => {
+const CreateImage = () => {
 
   const fetcher = async (url: string) => {
     const idToken = await getIdToken();
@@ -40,7 +38,6 @@ const CreatePost = () => {
   if (error) return <Typography variant="h1">Error</Typography>;
     
   return (
-    <Authenticated>
       <Box
         sx={{
           display: "flex",
@@ -68,8 +65,7 @@ const CreatePost = () => {
           }}
         />
       </Box>
-    </Authenticated>
   );
 };
 
-export default CreatePost;
+export default CreateImage;
