@@ -7,6 +7,14 @@ import img from "./profileimg.png";
 import Friend from "@mui/icons-material/PeopleAlt";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Publication from "../publication/Publication";
+import Comments from "../comments/Comments";
+import { Box } from "@mui/material";
+
+import { SwiperSlide, Swiper } from "swiper/react";
+import AuthSwitch from "./AuthSwitch";
+
+
+
 function Profile() {
   return (
     <div className={style.container}>
@@ -19,7 +27,7 @@ function Profile() {
       </div>
       <div className={style.information}>
         <div className={style.friend}>
-          <div className={style.myfriend}>
+          <div className={style.myfriend} >
             <Friend className={style.muicon} />
             <span className={style.title}>Amis</span>
           </div>
@@ -27,7 +35,38 @@ function Profile() {
             <ArrowForwardIosIcon className={style.muifleche} />
           </div>
         </div>
-        <Publication />
+
+        <Box
+          sx={{
+            position: "relative",
+            height: "80%",
+            paddingBottom: 2,
+            overflow: 'hidden',
+          }}
+        >
+          <Swiper
+            spaceBetween={1000}
+            slidesPerView={1}
+            initialSlide={0}
+            allowTouchMove={false}
+            style={{
+              height: "100%",
+              width: "100%",
+              overflow: 'hidden'
+            }}
+          >
+            <AuthSwitch slot="container-start" />
+            <SwiperSlide>
+              <Publication />
+            </SwiperSlide>
+            <SwiperSlide>
+              <Comments />
+            </SwiperSlide>
+            <SwiperSlide>
+              <Publication />
+            </SwiperSlide>
+          </Swiper>
+        </Box>
       </div>
     </div>
   );
