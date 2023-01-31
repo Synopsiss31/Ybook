@@ -6,8 +6,7 @@ import img from "./profileimg.png";
 
 import Friend from "@mui/icons-material/PeopleAlt";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import InfoIcon from '@mui/icons-material/Info';
+import Publication from "../publication/Publication";
 function Profile() {
   return (
     <div className={style.container}>
@@ -28,16 +27,7 @@ function Profile() {
             <ArrowForwardIosIcon className={style.muifleche} />
           </div>
         </div>
-        <div className={style.account}>
-          <div className={style.myaccount}>
-            <div className={style.headeraccount}></div>
-            <AccountCircleIcon className={style.muicon} />
-            <span className={style.title}>Mes informations</span>
-          </div>
-          <div className={style.rightaccount}>
-            <InfoIcon className={style.muiinfo} />
-          </div>
-        </div>
+        <Publication />
       </div>
     </div>
   );
