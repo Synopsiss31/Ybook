@@ -9,10 +9,12 @@ class MyDocument extends Document {
     return (
       <Html lang={AppConfig.locale}>
         <Head>
-          <link href="https://fonts.googleapis.com/css2?family=Sofia+Sans&display=swap" rel="stylesheet" />
-          <script src="https://kit.fontawesome.com/7d7b8cb9f6.js" crossOrigin="anonymous"></script>
+          <link
+            href="https://fonts.googleapis.com/css2?family=Sofia+Sans&display=swap"
+            rel="stylesheet"
+          />
         </Head>
-        
+
         <body>
           <Main />
           <NextScript />

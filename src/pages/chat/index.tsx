@@ -1,11 +1,7 @@
-import { Box, Typography } from '@mui/material';
+import ChatPageComponent from '../../components/discussion/ChatPage/chatPage';
 
 const ChatPage = () => {
-  return (
-    <Box>
-      <Typography variant="h4">Chat</Typography>
-    </Box>
-  );
+  return <ChatPageComponent />;
 };
 
 export default ChatPage;
