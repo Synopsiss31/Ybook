@@ -1,7 +1,7 @@
-import { Typography } from '@mui/material';
+import Profile from '../../components/profile/Profile';
 
 const ProfilePage = () => {
-  return <Typography variant="h1">Profile</Typography>;
+  return <Profile />;
 };
 
 export default ProfilePage;

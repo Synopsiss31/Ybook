@@ -1,19 +1,14 @@
-import Image from "next/image";
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import Friend from '@mui/icons-material/PeopleAlt';
+import { Box } from '@mui/material';
+import Image from 'next/image';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
-import style from "./profile.module.css";
-
-import img from "./profileimg.png";
-
-import Friend from "@mui/icons-material/PeopleAlt";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import Publication from "../publication/Publication";
-import Comments from "../comments/Comments";
-import { Box } from "@mui/material";
-
-import { SwiperSlide, Swiper } from "swiper/react";
-import AuthSwitch from "./AuthSwitch";
-
-
+import Comments from '../comments/Comments';
+import Publications from '../publication/Publications';
+import AuthSwitch from './AuthSwitch';
+import style from './profile.module.css';
+import img from './profileimg.png';
 
 function Profile() {
   return (
@@ -27,7 +22,7 @@ function Profile() {
       </div>
       <div className={style.information}>
         <div className={style.friend}>
-          <div className={style.myfriend} >
+          <div className={style.myfriend}>
             <Friend className={style.muicon} />
             <span className={style.title}>Amis</span>
           </div>
@@ -38,8 +33,8 @@ function Profile() {
 
         <Box
           sx={{
-            position: "relative",
-            height: "80%",
+            position: 'relative',
+            height: '80%',
             paddingBottom: 2,
             overflow: 'hidden',
           }}
@@ -50,20 +45,20 @@ function Profile() {
             initialSlide={0}
             allowTouchMove={false}
             style={{
-              height: "100%",
-              width: "100%",
-              overflow: 'hidden'
+              height: '100%',
+              width: '100%',
+              overflow: 'hidden',
             }}
           >
             <AuthSwitch slot="container-start" />
             <SwiperSlide>
-              <Publication />
+              <Publications />
             </SwiperSlide>
             <SwiperSlide>
               <Comments />
             </SwiperSlide>
             <SwiperSlide>
-              <Publication />
+              <Publications />
             </SwiperSlide>
           </Swiper>
         </Box>
