@@ -1,7 +1,8 @@
-import ChatPageComponent from '../../components/discussion/ChatPage/chatPage';
+import Messages from '../../components/messenger/Messages/Messages';
 
 const ChatPage = () => {
-  return <ChatPageComponent />;
+  // return <ChatPageComponent />;
+  return <Messages />;
 };
 
 export default ChatPage;

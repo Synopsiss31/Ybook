@@ -42,7 +42,7 @@ class Discussion extends Component<IDiscussionProps, IDiscussionState> {
 
   // eslint-disable-next-line class-methods-use-this
   handleClick = () => {
-    Router.push('/discussion');
+    Router.push('/chat/messages');
   };
 
   render() {

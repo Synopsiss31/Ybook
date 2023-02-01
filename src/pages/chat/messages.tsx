@@ -1,8 +1,8 @@
 // import Messages from '../components/messenger/Messages/Messages.js'
-import Messages from 'src/components/messenger/Messages/Messages';
+import ChatPageComponent from '../../components/discussion/ChatPage/chatPage';
 
 function messenger() {
-  return <Messages />;
+  return <ChatPageComponent />;
 }
 
 export default messenger;
