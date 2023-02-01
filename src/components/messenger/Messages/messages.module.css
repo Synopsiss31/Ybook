@@ -1,0 +1,58 @@
+#mainComponent {
+    background-color: #5E8EF7;
+}
+
+.partOne {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    padding-top: 4vw;
+}
+
+#appName {
+    margin: 0;
+    padding: 2vw 0 0 6vw;
+}
+
+.icon {
+    font-size: 6vw;
+}
+
+#partOneOptions {
+    display: flex;
+    padding: 2vw 6vw 0 0;
+    align-items: center;
+    justify-content: space-between;
+    width: 17vw;
+}
+
+.partTwo {
+    /* height: 1000px; */
+    background-color: white;
+    border-radius: 15vw 15vw 0 0;
+    margin-top: 5vw;
+    padding: 5vw 0;
+}
+
+.newChatButton {
+    position: fixed;
+    bottom: 15vw;
+    right: 6vw;
+    color: white;
+    background-color: #5E8EF7;
+    border: none;
+    font-size: 4vw;
+    font-family: 'Sofia Sans', sans-serif;
+    border-radius: 10vw;
+    padding: 3vw 5vw;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    box-shadow: 4px 4px 9px #999;
+}
+
+.newChatButton span {
+    font-size: 6vw;
+    margin-right: 1vw;
+}

@@ -1,0 +1,59 @@
+.chatPageInputMain {
+    background-color: var(--primary-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1vw 1.5vw;
+}
+
+.optionBut {
+    background-color: var(--light-color);
+    border: none;
+    /* margin: 1vw 3vw; */
+    border-radius: 50%;
+    padding: 3vw;
+    color: white;
+}
+
+.inputEmoji {
+    flex-grow: 1;
+    /* padding: 3vw; */
+    padding: 1vw;
+    background-color: var(--light-color);
+    border-radius: 9vw;
+    margin: 0vw 1vw;
+}
+
+.inputMessage {
+    background-color: transparent;
+    border: none;
+    color: white;
+    width: 87%;
+    font-size: 4vw;
+    padding: 2vw 0;
+    margin: 0vw 1vw;
+}
+
+.inputMessage:focus {
+    outline: none;
+}
+
+.inputMessage::placeholder {
+    color: white;
+}
+
+.emojiBut {
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 5vw;
+    padding: 2vw 0;
+}
+
+.cameraMic {
+    color: white;
+    background-color: transparent;
+    border: none;
+    padding: 4vw 2vw;
+    font-size: 5vw;
+}

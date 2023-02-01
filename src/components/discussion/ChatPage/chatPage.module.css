@@ -1,0 +1,56 @@
+.chatPageMain {
+    height: 100%;
+}
+
+.colorContainer {
+    height: 93%;
+    background-color: var(--primary-color);
+}
+
+.colorContainerInside {
+    height: 100%;
+    background-color: white;
+    border-radius: 0 0 11vw 11vw;
+}
+
+.topBar {
+    display: flex;
+    padding: 5vw 1vw 5vw 5vw;
+    align-items: center;
+}
+
+.profilePhoto {
+    width: 16vw;
+    height: 16vw;
+    border-radius: 50%;
+}
+
+.callIcon {
+    width: 6vw;
+    height: 6vw;
+    padding: 0 2vw 0 2vw;
+}
+
+.nameStatus {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-self: flex-start;
+    padding: 3vw 0 0 3vw;
+    font-size: 4.5vw;
+}
+
+.backIcon {
+    font-size: 7vw;
+    color: var(--primary-color);
+    padding-right: 3vw;
+}
+
+.name {
+    font-weight: bold;
+}
+
+.messages {
+    display: flex;
+    flex-direction: column;
+}

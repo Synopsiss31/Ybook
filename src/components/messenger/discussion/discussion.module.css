@@ -1,0 +1,46 @@
+.profilePhoto{
+    width: 20vw;
+    height: 20vw;
+    border-radius: 50%;
+}
+
+.discussion {
+    display: flex;
+    padding: 2vw 0 2vw 0;
+    width: 95%;
+    margin: auto;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nameMessage {
+    flex-grow: 2;
+    padding-left: 3vw;
+}
+
+.nameMessage .name {
+    font-weight: bold;
+    font-size: 5.5vw;
+}
+
+.nameMessage .message {
+    font-size: 4.5vw;
+    padding-left: 3vw;
+}
+
+.timeNumber {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.timeNumber .number {
+    padding-top: 1vw;
+    background-color: #5E8EF7;
+    color: white;
+    font-weight: bold;
+    padding: 1vw 2vw;
+    border-radius: 100%;
+    margin-top: 2vw;
+}
