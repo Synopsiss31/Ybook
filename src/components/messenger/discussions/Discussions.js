@@ -11,7 +11,7 @@ class Discussions extends Component {
       <div className='discussions'>
         {
           discussions.map(discussion => (
-            <Discussion key={discussion.name} discussion={discussion} />
+            <Discussion key={discussion.name} discussion={discussion}/>
           ))
         }
         <style jsx>{`

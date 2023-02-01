@@ -2,36 +2,45 @@ import React, { Component } from 'react';
 import Image from 'next/image'
 // import './discussion.css';
 import style from './discussion.module.css';
+import Router from 'next/router';
 
 class Discussion extends Component {
 
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            name: this.props.discussion.name,
-            message: this.props.discussion.message,
-            time: this.props.discussion.time,
-            unreadMessages: this.props.discussion.unreadMessages,
-            profilePhoto: this.props.discussion.profilePhoto
-        }
+    this.state = {
+      name: this.props.discussion.name,
+      message: this.props.discussion.message,
+      time: this.props.discussion.time,
+      unreadMessages: this.props.discussion.unreadMessages,
+      profilePhoto: this.props.discussion.profilePhoto,
     }
 
+    this.handleClick = this.handleClick.bind(this);
+    
+  }
 
-    render() {
-        return (
-            <div className="discussion">
-                {/* <img src={`../assets/${this.state.profilePhoto}.png`} alt="profile" /> */}
-                <Image src={require(`../assets/${this.state.profilePhoto}.png`)} alt="profile" className={style.profilePhoto}/>
-                <div className='nameMessage'>
-                    <div className='name'>{this.state.name}</div>
-                    <div className='message'>{this.state.message}</div>
-                </div>
-                <div className='timeNumber'>
-                    <div className='time'>{this.state.time}</div>
-                    <div className='number'>{this.state.unreadMessages}</div>
-                </div>
-                <style jsx>{`
+  
+  handleClick = () => {
+    Router.push('/discussion');
+  };
+
+  render() {
+    
+    return (
+      <div className="discussion" href='/discussion' onClick={this.handleClick}>
+        {/* <img src={`../assets/${this.state.profilePhoto}.png`} alt="profile" /> */}
+        <Image src={require(`../assets/${this.state.profilePhoto}.png`)} alt="profile" className={style.profilePhoto} />
+        <div className='nameMessage'>
+          <div className='name'>{this.state.name}</div>
+          <div className='message'>{this.state.message}</div>
+        </div>
+        <div className='timeNumber'>
+          <div className='time'>{this.state.time}</div>
+          <div className='number'>{this.state.unreadMessages}</div>
+        </div>
+        <style jsx>{`
                 .profilePhoto{
                     width: 20vw;
                     height: 20vw;
@@ -78,10 +87,10 @@ class Discussion extends Component {
                     border-radius: 100%;
                     margin-top: 2vw;
                 }
-                `}</style>  
-            </div>
-        );
-    }
+                `}</style>
+      </div>
+    );
+  }
 
 };
 
