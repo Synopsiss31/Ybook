@@ -1,24 +1,25 @@
-import { UserModel } from "@/types/models";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Box, IconButton, Menu, Paper, Typography } from "@mui/material";
-import Grid from "@mui/system/Unstable_Grid";
-import Image from "next/image";
-import React from "react";
-import UserCardMenu from "./userCardMenu/UserCardMenu";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Box, IconButton, Menu, Paper, Typography } from '@mui/material';
+import Grid from '@mui/system/Unstable_Grid';
+import Image from 'next/image';
+import React from 'react';
+
+import type { UserModel } from '@/types/models';
+
+// eslint-disable-next-line import/no-named-as-default
+import UserCardMenu from './userCardMenu/UserCardMenu';
 
 interface IUserCardProps {
   user: UserModel;
-  /*MUI IconButton */ interaction?: React.ReactNode;
-  /*MUI MenuItem */ menuItems?: React.ReactNode[];
+  /* MUI IconButton */ interaction?: React.ReactNode;
+  /* MUI MenuItem */ menuItems?: React.ReactNode[];
 }
 
-const UserCard: React.FC<IUserCardProps> = ({ user, interaction, menuItems }) => {
-  
-
+const UserCard: React.FC<IUserCardProps> = ({ user, interaction }) => {
   if (interaction) {
-    /*Verify interaction is a MUI IconButton */
-    if (!React.isValidElement(interaction) || interaction.type != IconButton)
-      throw new Error("interaction must be a MUI IconButton");
+    /* Verify interaction is a MUI IconButton */
+    if (!React.isValidElement(interaction) || interaction.type !== IconButton)
+      throw new Error('interaction must be a MUI IconButton');
   }
 
   // if (menuItems) {
@@ -28,7 +29,7 @@ const UserCard: React.FC<IUserCardProps> = ({ user, interaction, menuItems }) =>
   // }
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  
+
   const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -37,16 +38,15 @@ const UserCard: React.FC<IUserCardProps> = ({ user, interaction, menuItems }) =>
     setAnchorEl(null);
   };
 
-  
-  if(!user) return null;
+  if (!user) return null;
 
   return (
     <Paper
       sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        width: "fit-content",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: 'fit-content',
       }}
     >
       <Grid
@@ -55,22 +55,22 @@ const UserCard: React.FC<IUserCardProps> = ({ user, interaction, menuItems }) =>
         sx={{
           width: 300,
           height: 50,
-          alignItems: "center",
-          justifyContent: "space-between",
+          alignItems: 'center',
+          justifyContent: 'space-between',
           margin: 2,
         }}
       >
         <Grid xs={2}>
           <Box
             sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "50px",
-              height: "50px",
-              bgcolor: "primary.main",
-              borderRadius: "50%",
-              overflow: "hidden",
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '50px',
+              height: '50px',
+              bgcolor: 'primary.main',
+              borderRadius: '50%',
+              overflow: 'hidden',
             }}
           >
             <Image
@@ -93,20 +93,20 @@ const UserCard: React.FC<IUserCardProps> = ({ user, interaction, menuItems }) =>
           }}
         >
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {user?.firstname + " " + user?.lastname}
+            {`${user?.firstname} ${user?.lastname}`}
           </Typography>
         </Grid>
         {interaction && (
           <Grid xs={2}>
             <Box
               sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "50px",
-                height: "50px",
-                borderRadius: "50%",
-                overflow: "hidden",
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '50px',
+                height: '50px',
+                borderRadius: '50%',
+                overflow: 'hidden',
               }}
             >
               {interaction}
@@ -114,23 +114,19 @@ const UserCard: React.FC<IUserCardProps> = ({ user, interaction, menuItems }) =>
           </Grid>
         )}
         <IconButton onClick={handleMenuClick}>
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
           onClose={handleMenuClose}
         >
-
-          <UserCardMenu userId={
-            user.id
-          }/>
-            </Menu> 
-      
+          <UserCardMenu userId={user.id} />
+        </Menu>
       </Grid>
     </Paper>
   );
-}
+};
 
-export default UserCard
+export default UserCard;

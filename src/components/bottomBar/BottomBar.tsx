@@ -1,36 +1,30 @@
-import { Pages, useAppContext } from "@/lib/contexts/AppContext";
-import { AddTwoTone } from "@mui/icons-material";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import ChatIcon from "@mui/icons-material/Chat";
-import HomeIcon from "@mui/icons-material/Home";
+import ChatIcon from '@mui/icons-material/Chat';
+import HomeIcon from '@mui/icons-material/Home';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { BottomNavigation, BottomNavigationAction, Box, Fab } from '@mui/material';
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { BottomNavigation, BottomNavigationAction, Box } from '@mui/material';
 
+import { Pages, useAppContext } from '@/lib/contexts/AppContext';
+
+import AppFabButton from './fab/AppFabButton';
 
 const BottomBar = () => {
-  const { state, dispatch } = useAppContext();
-  const router = useRouter();
-  
-  useEffect(() => {
-    router.push(state.page.path);
-  }, [state]);
-  
+  const { state: appState, dispatch: setAppState } = useAppContext();
 
   return (
     <Box>
       <BottomNavigation
-        value={state.page}
+        value={appState.page}
         onChange={(event, newValue) => {
           event.preventDefault();
-          dispatch({ type: "SET_PAGE", payload: newValue });
+          setAppState({ type: 'SET_PAGE', payload: newValue });
         }}
         showLabels
         sx={{
-          width: "100%",
-          justifyContent: "space-evenly",
-          backgroundColor: "background.paper",
+          width: '100%',
+          justifyContent: 'space-evenly',
+          backgroundColor: 'background.paper',
+          position: 'relative',
         }}
       >
         <BottomNavigationAction
@@ -50,22 +44,7 @@ const BottomBar = () => {
           }}
         />
 
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: 0,
-            left: "auto",
-            right: "auto",
-            p: 1.5,
-            m: 1.5,
-            backgroundColor: "background.default",
-            borderRadius: "50%",
-          }}
-        >
-          <Fab color="primary" aria-label="add">
-            <AddTwoTone />
-          </Fab>
-        </Box>
+        <AppFabButton />
 
         <BottomNavigationAction
           label="Chat"
@@ -89,5 +68,3 @@ const BottomBar = () => {
 };
 
 export default BottomBar;
-
-    

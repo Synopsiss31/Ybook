@@ -23,8 +23,10 @@ requestBody?: UserCreation,
             method: 'POST',
             url: '/rest/users/create',
             body: requestBody,
-            mediaType: 'application/json',
+          mediaType: 'application/json',
+            
         });
+      
     }
 
     /**

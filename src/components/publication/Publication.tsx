@@ -1,41 +1,197 @@
+/* eslint-disable no-nested-ternary */
 // eslint-disable-next-line simple-import-sort/imports
 import Comment from '@mui/icons-material/ChatBubbleOutline';
 import Like from '@mui/icons-material/FavoriteBorder';
 import ActiveLike from '@mui/icons-material/FavoriteOutlined';
-import { Box, Divider, Fade, IconButton, Paper, Typography } from '@mui/material';
-import Grid from "@mui/material/Unstable_Grid2";
-import { useState } from 'react';
-import Editor from '../editor/Editor';
+import {
+  Button,
+  Divider,
+  Fade,
+  IconButton,
+  Paper,
+  Skeleton,
+  TextField,
+  Typography,
+} from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2';
+import { useEffect, useState } from 'react';
+import useSWR from 'swr';
+import { DEFAULT_URL } from '@/lib/hooks/API/users/useAPIUser';
+import { getIdToken } from '@/lib/utils/cognito';
+import type { PostModel } from '@/types/models';
 import GetImage from '../image/get';
 
-function Publication() {
+const Publication = ({ postId }: { postId: number }) => {
+  if (!postId) throw new Error('postId is undefined');
 
-  const [isLike, setIsLike] = useState(false);
+  const fetcher = async (url: string) => {
+    const token = await getIdToken();
 
-  const [displayComment, setDisplayComment] = useState(false);
-  
-  const username = "Moi";
+    const response = await fetch(`${DEFAULT_URL}${url}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        include: {
+          postAttachments: true,
+          user: true,
+          postLikes: true,
+          postComments: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      }),
+    });
+    if (!response.ok) {
+      throw new Error('An error occurred while fetching the data.');
+    }
 
-  const nbLike = 1076;
-
-  const nbComment = 18;
-
-  const description = "Voila une photo de mon super setup !";
-
-  const toggleComment = () => {
-    setDisplayComment((previous) => !previous);
+    return response.json();
   };
 
+  const { data, error, isLoading } = useSWR<PostModel[]>(
+    `/post/read/${postId}`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      refreshWhenHidden: false,
+      refreshWhenOffline: false,
+    }
+  );
+
+  const post = data?.[0];
+
+  const [isLike, setIsLike] = useState(
+    !!post?.postLikes?.find((like) => like.userId === post?.userId)
+  );
+
+  const [isLikeCounted] = useState(
+    !!post?.postLikes?.find((like) => like.userId === post?.userId)
+  );
+
+  const [displayComment] = useState(true);
+
+  const [width, setWidth] = useState(0);
+
+  const [commenting, setCommenting] = useState(false);
+
+  const [comment, setComment] = useState('');
+
+  const handleLike = async () => {
+    // api call
+    if (!isLike) {
+      const response = await fetch(`${DEFAULT_URL}/post/like/${postId}`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${await getIdToken()}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('An error occurred while fetching the data.');
+      } else {
+        setIsLike(true);
+      }
+      return;
+    }
+
+    if (isLike) {
+      const response = await fetch(`${DEFAULT_URL}/post/like/${postId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${await getIdToken()}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('An error occurred while fetching the data.');
+      } else {
+        setIsLike(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    // listen to resize
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 600) {
+        setWidth(500);
+      } else {
+        setWidth(window.innerWidth - 50);
+      }
+    });
+
+    // set initial width
+    if (window.innerWidth > 600) {
+      setWidth(500);
+    } else {
+      setWidth(window.innerWidth - 50);
+    }
+
+    return () => {
+      window.removeEventListener('resize', () => {});
+    };
+  }, []);
+
+  if (isLoading || !post?.htmlContent)
+    return (
+      <Skeleton
+        variant="rectangular"
+        width={width}
+        height={width + width * 0.1}
+        sx={{
+          borderRadius: 10,
+        }}
+      ></Skeleton>
+    );
+
+  if (error)
+    return (
+      <Typography variant="h6" component="h2">
+        Error
+      </Typography>
+    );
+
+  const nbLike = post.postLikes?.length ?? 0;
+
+  const handleComment = async () => {
+    // send comment to api
+    if (comment === '') return;
+    setCommenting(false);
+    const response = await fetch(`${DEFAULT_URL}/post/comment/`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${await getIdToken()}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        postId,
+        text: comment,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error('An error occurred while fetching the data.');
+    } else {
+      setComment('');
+    }
+  };
 
   return (
-    <Paper>
+    <Paper
+      sx={{
+        width,
+      }}
+    >
       <Grid container direction="column" spacing={2}>
         <Grid
           container
           sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-around",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-around',
           }}
         >
           <Grid
@@ -43,88 +199,105 @@ function Publication() {
               maxHeight: 60,
               mx: 3,
               mt: 1,
-              display: "flex",
-              alignItems: "center",
+              display: 'flex',
+              alignItems: 'center',
             }}
           >
             <Paper
               sx={{
                 width: 50,
                 height: 50,
-                borderRadius: "50%",
-                overflow: "hidden",
+                borderRadius: '50%',
+                overflow: 'hidden',
               }}
             >
-              <GetImage
-                fileID="a36de206-50dc-4e10-ab49-fad8b3e1b7b1"
-                width={50}
-                height={50}
-              />
+              {post?.user?.avatarS3Key && (
+                <GetImage
+                  fileID={post.user.avatarS3Key!}
+                  width={50}
+                  height={50}
+                />
+              )}
             </Paper>
           </Grid>
           <Grid
             xs
             sx={{
-              display: "flex",
-              alignItems: "center",
+              display: 'flex',
+              alignItems: 'center',
             }}
           >
             <Typography
               component="h1"
               sx={{
-                fontWeight: "bold",
-                fontSize: "1.2rem",
+                fontWeight: 'bold',
+                fontSize: '1.2rem',
               }}
             >
-              @{username}
+              @{`${post?.user?.firstname} ${post?.user?.lastname}` ?? 'Unknown'}
             </Typography>
           </Grid>
         </Grid>
-        <Grid xs>
-          <GetImage fileID="a36de206-50dc-4e10-ab49-fad8b3e1b7b1" />
-        </Grid>
+        {post.postAttachments?.length > 0 ||
+          (true && (
+            <Grid xs>
+              <GetImage
+                fileID={
+                  post.postAttachments[0]?.s3Key ?? 'default-post-image.jpg'
+                }
+                width={width}
+                height={width}
+              />
+            </Grid>
+          ))}
         <Grid container xs sx={{}}>
           <Grid
             xs={6}
             container
             sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-evenly",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-evenly',
             }}
             wrap="nowrap"
           >
             <Grid
               xs
               sx={{
-                display: "flex",
-                alignItems: "center",
+                display: 'flex',
+                alignItems: 'center',
               }}
             >
               <IconButton
-                onClick={() => setIsLike((previous) => !previous)}
-                sx={{ position: "relative", m: 1 }}
+                onClick={handleLike}
+                sx={{ position: 'relative', m: 1 }}
               >
                 <Fade in={isLike} timeout={300}>
-                  <ActiveLike color="error" sx={{ position: "absolute" }} />
+                  <ActiveLike color="error" sx={{ position: 'absolute' }} />
                 </Fade>
                 <Fade in={!isLike} timeout={300}>
-                  <Like sx={{ position: "absolute" }} />
+                  <Like sx={{ position: 'absolute' }} />
                 </Fade>
               </IconButton>
               <Typography component="span">
-                {isLike ? nbLike + 1 : nbLike}
+                {isLike && !isLikeCounted
+                  ? nbLike + 1
+                  : !isLike && isLikeCounted
+                  ? nbLike - 1
+                  : nbLike}
               </Typography>
             </Grid>
             <Grid
               xs
               sx={{
-                display: "flex",
-                alignItems: "center",
+                display: 'flex',
+                alignItems: 'center',
               }}
             >
-                <Comment />
-              <Typography component="span">{nbComment}</Typography>
+              <Comment />
+              <Typography component="span">
+                {post.postComments?.length ?? 0}
+              </Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -140,15 +313,17 @@ function Publication() {
             <Typography
               component="span"
               sx={{
-                fontWeight: "bold",
-                fontSize: "1.2rem",
+                fontWeight: 'bold',
+                fontSize: '1.2rem',
               }}
             >
-              @{username}
+              @{`${post?.user?.firstname} ${post?.user?.lastname}` ?? 'Unknown'}
             </Typography>
           </Grid>
           <Grid xs>
-            <Typography component="span">{description}</Typography>
+            <Typography component="span">
+              {post?.htmlContent ?? 'Unknown'}
+            </Typography>
           </Grid>
         </Grid>
         <Fade in={displayComment} timeout={300} unmountOnExit>
@@ -156,40 +331,63 @@ function Publication() {
             <Divider />
             <Grid>
               <Grid>
-                <Grid>
-                  <Editor />
-                </Grid>
+                {post.postComments?.map((currentComment) => {
+                  return (
+                    <Grid key={currentComment.id} container direction="column">
+                      <Grid>
+                        <Typography
+                          component="span"
+                          sx={{
+                            fontSize: '0.8rem',
+                          }}
+                          color={
+                            currentComment.user.id === post.user?.id
+                              ? 'primary'
+                              : 'secondary'
+                          }
+                        >
+                          @
+                          {`${currentComment.user.firstname} ${currentComment.user.lastname}`}
+                        </Typography>
+                      </Grid>
+                      <Grid>
+                        <Typography component="span">
+                          {currentComment.text}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  );
+                })}
               </Grid>
+              <Grid>
+                <TextField
+                  sx={{ width: '100%' }}
+                  placeholder="Add a comment..."
+                  multiline
+                  rows={2}
+                  variant="standard"
+                  onFocus={() => setCommenting(true)}
+                  onBlur={() => setCommenting(false)}
+                  onChange={(e) => setComment(e.target.value)}
+                />
+              </Grid>
+              <Fade in={commenting} timeout={300}>
+                <Grid>
+                  <Button
+                    onClick={handleComment}
+                    variant="contained"
+                    sx={{ width: '100%' }}
+                  >
+                    Send
+                  </Button>
+                </Grid>
+              </Fade>
             </Grid>
           </Grid>
         </Fade>
       </Grid>
     </Paper>
   );
-}
-
-const Def = () => {
-  return (
-    <Box
-      sx={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        overflowY: 'scroll',
-      }}
-    >
-      {Array(Math.floor(Math.random() * 10) + 1)
-        .fill(0)
-        .map((_, index) => (
-          <Box key={index} sx={{ m: 2 }}>
-            <Publication />
-          </Box>
-        ))}
-    </Box>
-  );
 };
 
-export default Def;
+export default Publication;

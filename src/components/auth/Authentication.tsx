@@ -1,17 +1,14 @@
-import { Box } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
-import { minWidth } from "@mui/system";
-import { Swiper,  SwiperSlide } from "swiper/react";
-import AuthSwitch from "./AuthSwitch";
-import ConfirmUser from "./ConfirmUser";
-import ForgetPassword from "./ForgetPassword";
-import Login from "./Login";
-import Register from "./Register";
+import { Box } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
-
+import AuthSwitch from './AuthSwitch';
+import ConfirmUser from './ConfirmUser';
+import ForgetPassword from './ForgetPassword';
+import Login from './Login';
+import Register from './Register';
 
 const Authentication = () => {
-  
   return (
     <Grid
       container
@@ -21,8 +18,8 @@ const Authentication = () => {
     >
       <Box
         sx={{
-          position: "absolute",
-          marginTop: "10%",
+          position: 'absolute',
+          marginTop: '10%',
           top: 0,
           left: 0,
           right: 0,
@@ -33,11 +30,11 @@ const Authentication = () => {
           spaceBetween={1000}
           slidesPerView={1}
           initialSlide={0}
-          allowTouchMove={false}                              
+          allowTouchMove={false}
           style={{
-            height: "80%",
-            width: "34%",
-            minWidth: "300px",
+            height: '80%',
+            width: '34%',
+            minWidth: '300px',
           }}
         >
           <AuthSwitch slot="container-start" />
@@ -58,6 +55,5 @@ const Authentication = () => {
     </Grid>
   );
 };
-
 
 export default Authentication;

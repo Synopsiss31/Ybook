@@ -1,10 +1,13 @@
-import useAuth from '@/lib/hooks/useAuth';
 import { Box, Button, TextField, Typography } from '@mui/material';
-import Grid from "@mui/material/Unstable_Grid2";
+import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 import { useSwiper } from 'swiper/react';
-import PasswordInput, { IPasswordInputRef } from './input/PasswordInput';
+
+import useAuth from '@/lib/hooks/useAuth';
+
 import { AuthenticationScreens } from './AuthenticationScreens';
+import type { IPasswordInputRef } from './input/PasswordInput';
+import PasswordInput from './input/PasswordInput';
 
 const Register: React.FC = () => {
   const { register } = useAuth();
@@ -24,43 +27,46 @@ const Register: React.FC = () => {
   const handleRegister = () => {
     try {
       if (passwordRef.current?.value !== passwordConfirmRef.current?.value) {
-        throw new Error("Password does not match");
+        throw new Error('Password does not match');
       }
-      if (!usernameRef.current?.value || !passwordRef.current?.value || !firstnameRef.current?.value || !lastnameRef.current?.value) {
-        throw new Error("Please fill in all fields");
-      }
-      else {
+      if (
+        !usernameRef.current?.value ||
+        !passwordRef.current?.value ||
+        !firstnameRef.current?.value ||
+        !lastnameRef.current?.value
+      ) {
+        throw new Error('Please fill in all fields');
+      } else {
         register({
-        email: usernameRef.current?.value,
-        password: passwordRef.current?.value,
-        name: firstnameRef.current?.value,
-        given_name: lastnameRef.current?.value,
+          email: usernameRef.current?.value,
+          password: passwordRef.current?.value,
+          name: firstnameRef.current?.value,
+          given_name: lastnameRef.current?.value,
         });
         swiper.slideTo(AuthenticationScreens.ConfirmUser);
       }
     } catch (error) {
-      console.error(error);
+      /* empty */
     }
   };
 
   const handleLogin = () => {
     swiper.slideTo(AuthenticationScreens.Login);
-  }
-
+  };
 
   return (
     <Box
       sx={{
-        position: "relative",
-        overflow: "hidden",
-        marginTop: "8%",
+        position: 'relative',
+        overflow: 'hidden',
+        marginTop: '8%',
       }}
     >
       <Grid
         container
         spacing={2}
         sx={{
-          paddingTop: "2%",
+          paddingTop: '2%',
         }}
       >
         <Grid xs={12}>
@@ -113,11 +119,11 @@ const Register: React.FC = () => {
           variant="body2"
           align="center"
           sx={{
-            marginTop: "2%",
-            color: "primary.main",
-            "&:hover": {
-              cursor: "pointer",
-              textDecoration: "underline",
+            marginTop: '2%',
+            color: 'primary.main',
+            '&:hover': {
+              cursor: 'pointer',
+              textDecoration: 'underline',
             },
           }}
           onClick={handleLogin}
@@ -128,6 +134,5 @@ const Register: React.FC = () => {
     </Box>
   );
 };
-
 
 export default Register;

@@ -1,9 +1,11 @@
-import useAuth from "@/lib/hooks/useAuth";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { Box, Button, IconButton, TextField } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
-import React from "react";
-import PasswordInput, { IPasswordInputRef } from "./input/PasswordInput";
+import { Box, Button, TextField } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2';
+import React from 'react';
+
+import useAuth from '@/lib/hooks/useAuth';
+
+import type { IPasswordInputRef } from './input/PasswordInput';
+import PasswordInput from './input/PasswordInput';
 
 const ConfirmUser: React.FC = () => {
   const { confirmUser } = useAuth();
@@ -12,39 +14,34 @@ const ConfirmUser: React.FC = () => {
 
   const passwordRef = React.useRef<IPasswordInputRef>(null);
 
- 
   const handleConfirmUser = () => {
     try {
-      
-      if (
-        !usernameRef.current?.value ||
-        !passwordRef.current?.value 
-      ) {
-        throw new Error("Please fill in all fields");
+      if (!usernameRef.current?.value || !passwordRef.current?.value) {
+        throw new Error('Please fill in all fields');
       } else {
         confirmUser({
           email: usernameRef.current?.value,
-          code: passwordRef.current?.value
+          code: passwordRef.current?.value,
         });
       }
     } catch (error) {
-      console.error(error);
+      /* empty */
     }
   };
 
   return (
     <Box
       sx={{
-        position: "relative",
-        overflow: "hidden",
-        marginTop: "8%",
+        position: 'relative',
+        overflow: 'hidden',
+        marginTop: '8%',
       }}
     >
       <Grid
         container
         spacing={2}
         sx={{
-          paddingTop: "2%",
+          paddingTop: '2%',
         }}
       >
         <Grid xs={12}>
@@ -57,7 +54,7 @@ const ConfirmUser: React.FC = () => {
           />
         </Grid>
         <Grid xs={12}>
-          <PasswordInput ref={passwordRef}  label="Code"/>
+          <PasswordInput ref={passwordRef} label="Code" />
         </Grid>
 
         <Grid xs={12}>

@@ -1,6 +1,6 @@
-import { UserModel } from "@/types/models";
-import React from "react";
-import { createContext } from "react";
+import React, { createContext } from 'react';
+
+import type { UserModel } from '@/types/models';
 
 interface IUserCtx {
   user: UserModel | null;
@@ -8,37 +8,34 @@ interface IUserCtx {
 
 const UserCtx = createContext<IUserCtx | null>(null);
 
-const UserCtxProvider: React.FC< React.PropsWithChildren<unknown>>
-= ({ children }) => {
+const UserCtxProvider: React.FC<React.PropsWithChildren<unknown>> = ({
+  children,
+}) => {
   const [user, setUser] = React.useState<UserModel | null>(null);
-  
+
   React.useEffect(() => {
     // TODO: Fetch user from API
     setUser({
       id: 1,
       createdAt: new Date(),
       updatedAt: new Date(),
-      firstname: "John",
-      lastname: "Doe",
-      email: "jdoe@example.com"
+      firstname: 'John',
+      lastname: 'Doe',
+      email: 'jdoe@example.com',
     } as UserModel);
   }, []);
 
-
-  return (
-    <UserCtx.Provider value={{ user }}>{children}</UserCtx.Provider>
-  );
+  return <UserCtx.Provider value={{ user }}>{children}</UserCtx.Provider>;
 };
 
 const useUserCtx = () => {
   const ctx = React.useContext(UserCtx);
 
   if (!ctx) {
-    throw new Error("useUserCtx must be used within UserCtxProvider");
+    throw new Error('useUserCtx must be used within UserCtxProvider');
   }
 
   return ctx;
-}
-
+};
 
 export { UserCtxProvider, useUserCtx };

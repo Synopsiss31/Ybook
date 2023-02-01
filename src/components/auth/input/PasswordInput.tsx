@@ -1,6 +1,8 @@
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { IconButton, InputAdornment, TextField, TextFieldProps } from "@mui/material";
-import React, { forwardRef, ForwardRefRenderFunction } from "react";
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import type { TextFieldProps } from '@mui/material';
+import { IconButton, InputAdornment, TextField } from '@mui/material';
+import type { ForwardRefRenderFunction } from 'react';
+import React, { forwardRef } from 'react';
 
 interface IPasswordInputProps {
   confirm?: boolean;
@@ -8,31 +10,32 @@ interface IPasswordInputProps {
   textFieldProps?: TextFieldProps;
 }
 
-export interface IPasswordInputRef extends HTMLInputElement {
-}
+export interface IPasswordInputRef extends HTMLInputElement {}
 
+const PasswordInput: ForwardRefRenderFunction<
+  IPasswordInputRef,
+  IPasswordInputProps
+> = ({ confirm, label, textFieldProps }, ref) => {
+  const [showPassword, setShowPassword] = React.useState(false);
 
-const PasswordInput: ForwardRefRenderFunction< IPasswordInputRef, IPasswordInputProps> = ({confirm, label,textFieldProps}, ref) => {
-    const [showPassword, setShowPassword] = React.useState(false);
-
-    const handleClickShowPassword = () => {
-      setShowPassword(!showPassword);
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
   };
-  
+
   return (
     <TextField
       {...textFieldProps}
       inputRef={ref}
-      label={label || (confirm ? "Confirm Password" : "Password")}
+      label={label || (confirm ? 'Confirm Password' : 'Password')}
       variant="outlined"
-      type={showPassword ? "text" : "password"}
+      type={showPassword ? 'text' : 'password'}
       fullWidth
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
             <IconButton
               aria-label={`toggle ${
-                label || (confirm ? "Confirm Password" : "Password")
+                label || (confirm ? 'Confirm Password' : 'Password')
               } visibility`}
               onClick={handleClickShowPassword}
               edge="end"
@@ -44,7 +47,6 @@ const PasswordInput: ForwardRefRenderFunction< IPasswordInputRef, IPasswordInput
       }}
     />
   );
-        
-}
+};
 
-export default forwardRef(PasswordInput)
+export default forwardRef(PasswordInput);

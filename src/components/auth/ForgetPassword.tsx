@@ -1,22 +1,23 @@
-import useAuth from "@/lib/hooks/useAuth";
-import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
-import { NextResponse } from "next/server";
-import React from "react";
-import PasswordInput, { IPasswordInputRef } from "./input/PasswordInput";
-import { useSwiper } from 'swiper/react';
-import { AuthenticationScreens } from './AuthenticationScreens';
+import { Box, Button, TextField, Typography } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2';
+import React from 'react';
 import toast from 'react-hot-toast';
+import { useSwiper } from 'swiper/react';
 
+import useAuth from '@/lib/hooks/useAuth';
+
+import { AuthenticationScreens } from './AuthenticationScreens';
+import type { IPasswordInputRef } from './input/PasswordInput';
+import PasswordInput from './input/PasswordInput';
 
 interface IForgetPasswordProps {
   nextStep: (step?: number) => void;
-  email:(email? : string)=> string;
+  email: (email?: string) => string;
 }
 
 const ForgetPasswordNewPassword: React.FC<IForgetPasswordProps> = ({
   nextStep,
-  email
+  email,
 }) => {
   const { forgetPasswordConfirm } = useAuth();
 
@@ -29,40 +30,40 @@ const ForgetPasswordNewPassword: React.FC<IForgetPasswordProps> = ({
   const handleForgetPassword = () => {
     try {
       if (passwordRef.current?.value !== passwordConfirmRef.current?.value) {
-        throw new Error("Password does not match");
+        throw new Error('Password does not match');
       }
       if (!passwordRef.current?.value || !codeRef.current?.value) {
-        throw new Error("Please fill in all fields");
+        throw new Error('Please fill in all fields');
       } else {
         forgetPasswordConfirm({
           password: passwordRef.current?.value,
           code: codeRef.current?.value,
           email: email(),
         });
-        nextStep()
+        nextStep();
       }
     } catch (error) {
-      console.error(error);
+      /* empty */
     }
   };
 
   return (
     <Box
       sx={{
-        position: "relative",
-        overflow: "hidden",
-        marginTop: "8%",
+        position: 'relative',
+        overflow: 'hidden',
+        marginTop: '8%',
       }}
     >
       <Grid
         container
         spacing={2}
         sx={{
-          paddingTop: "2%",
+          paddingTop: '2%',
         }}
       >
         <Grid xs={12}>
-          <Typography  gutterBottom>
+          <Typography gutterBottom>
             The code has been sent to your email
           </Typography>
         </Grid>
@@ -90,10 +91,9 @@ const ForgetPasswordNewPassword: React.FC<IForgetPasswordProps> = ({
   );
 };
 
-
 const ForgetPasswordSendCode: React.FC<IForgetPasswordProps> = ({
   nextStep,
-  email
+  email,
 }) => {
   const { forgetPasswordSendCode } = useAuth();
 
@@ -102,32 +102,32 @@ const ForgetPasswordSendCode: React.FC<IForgetPasswordProps> = ({
   const handleForgetPassword = () => {
     try {
       if (!usernameRef.current?.value) {
-        throw new Error("Please fill in all fields");
+        throw new Error('Please fill in all fields');
       } else {
         email(usernameRef.current?.value);
         forgetPasswordSendCode({
           email: usernameRef.current?.value,
         });
-        nextStep()
+        nextStep();
       }
     } catch (error) {
-      console.error(error);
+      /* empty */
     }
   };
 
   return (
     <Box
       sx={{
-        position: "relative",
-        overflow: "hidden",
-        marginTop: "8%",
+        position: 'relative',
+        overflow: 'hidden',
+        marginTop: '8%',
       }}
     >
       <Grid
         container
         spacing={2}
         sx={{
-          paddingTop: "2%",
+          paddingTop: '2%',
         }}
       >
         <Grid xs={12}>
@@ -154,16 +154,13 @@ const ForgetPasswordSendCode: React.FC<IForgetPasswordProps> = ({
   );
 };
 
-
-
 const ForgetPassword: React.FC = () => {
   const [step, setStep] = React.useState(0);
-  const [email, setEmail] = React.useState("");
+  const [email, setEmail] = React.useState('');
 
-  const nextStep = (step?: number) => {
-    if (step === undefined)
-      setStep((step) => step + 1);
-    else setStep(step);
+  const nextStep = (currentStep?: number) => {
+    if (currentStep === undefined) setStep((prev) => prev + 1);
+    else setStep(currentStep);
   };
 
   const getEmail = (newEmail?: string) => {
@@ -173,33 +170,24 @@ const ForgetPassword: React.FC = () => {
     return email;
   };
 
-  const swiper = useSwiper()
-
+  const swiper = useSwiper();
 
   if (step > 1) {
-    swiper.slideTo(AuthenticationScreens.Login)
+    swiper.slideTo(AuthenticationScreens.Login);
     setStep(0);
-    toast.success("Password reset successfully")
+    toast.success('Password reset successfully');
   }
 
   return (
     <>
       {step === 0 && (
-        <ForgetPasswordSendCode
-          nextStep={nextStep}
-          email={getEmail}
-        />
+        <ForgetPasswordSendCode nextStep={nextStep} email={getEmail} />
       )}
       {step === 1 && (
-        <ForgetPasswordNewPassword
-          nextStep={nextStep}
-          email={getEmail}
-        />
+        <ForgetPasswordNewPassword nextStep={nextStep} email={getEmail} />
       )}
     </>
-
-  )
-}
-
+  );
+};
 
 export default ForgetPassword;

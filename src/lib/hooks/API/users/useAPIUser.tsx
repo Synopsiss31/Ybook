@@ -1,11 +1,11 @@
-import { getIdToken } from '@/lib/utils/cognito';
-import { UserModel } from '@/types/models';
 import useSWR from 'swr';
+
+import { getIdToken } from '@/lib/utils/cognito';
+import type { UserModel } from '@/types/models';
 
 export const DEFAULT_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const useCreateUser = (user: UserCreation) => {
-
   const fetcher = async (url: string) => {
     const response = await fetch(`${DEFAULT_URL}${url}`, {
       method: 'POST',
@@ -22,30 +22,26 @@ const useCreateUser = (user: UserCreation) => {
     return response.json();
   };
 
-  const { data, error,isLoading } = useSWR<UserModel>('/users', fetcher, {
+  const { data, error, isLoading } = useSWR<UserModel>('/users', fetcher, {
     revalidateOnFocus: false,
   });
 
   return {
     data,
     error,
-    isLoading
+    isLoading,
   };
-}
+};
 
 const useGetCurrentUser = () => {
-
   const fetcher = async (url: string) => {
     const idToken = await getIdToken();
-
-    console.log("idToken", idToken);
-    console.log(DEFAULT_URL+url);
 
     const response = await fetch(`${DEFAULT_URL}${url}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization' : `Bearer ${idToken}`
+        Authorization: `Bearer ${idToken}`,
       },
     });
 
@@ -60,38 +56,40 @@ const useGetCurrentUser = () => {
     revalidateOnFocus: false,
   });
 
-
   return {
     data,
     error,
-    isLoading
+    isLoading,
   };
-}
+};
 
 const useReadUser = (filters: any) => {
-
   const fetcher = async (url: string) => {
     const idToken = await getIdToken();
 
     const response = await fetch(`${DEFAULT_URL}${url}`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${idToken}`,
       },
       body: JSON.stringify(filters),
     });
 
     if (!response.ok) {
-      throw new Error("An error occurred while fetching the user.");
+      throw new Error('An error occurred while fetching the user.');
     }
 
     return response.json();
   };
 
-  const { data, error, isLoading } = useSWR<UserModel[]>(`/users/read`, fetcher, {
-    revalidateOnFocus: false,
-  });
+  const { data, error, isLoading } = useSWR<UserModel[]>(
+    `/users/read`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
+  );
 
   return {
     data,
@@ -101,34 +99,36 @@ const useReadUser = (filters: any) => {
 };
 
 const useReadOneUser = (filters: any) => {
-
-
   const fetcher = async (url: string) => {
-        const idToken = await getIdToken();
+    const idToken = await getIdToken();
 
-        const response = await fetch(`${DEFAULT_URL}${url}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${idToken}`
-          },
-          body: JSON.stringify(filters),
-        });
+    const response = await fetch(`${DEFAULT_URL}${url}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${idToken}`,
+      },
+      body: JSON.stringify(filters),
+    });
 
     if (!response.ok) {
       throw new Error('An error occurred while fetching the user.');
     }
-        
+
     return response.json();
   };
 
-  const { data, error, isLoading } = useSWR<UserModel>(`/users/readOne`, fetcher, { revalidateOnFocus: false,});
+  const { data, error, isLoading } = useSWR<UserModel>(
+    `/users/readOne`,
+    fetcher,
+    { revalidateOnFocus: false }
+  );
 
   return {
     data,
     error,
-    isLoading
+    isLoading,
   };
-}
+};
 
-export { useCreateUser, useGetCurrentUser, useReadUser, useReadOneUser };
+export { useCreateUser, useGetCurrentUser, useReadOneUser, useReadUser };

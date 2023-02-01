@@ -1,58 +1,86 @@
-import { useUserCtx } from "@/lib/contexts/UserCtx";
-import useAuth from "@/lib/hooks/useAuth";
-import LogoutIcon from '@mui/icons-material/Logout';
-import { Box, IconButton, Paper } from "@mui/material";
-import Grid from "@mui/system/Unstable_Grid";
-import toast from "react-hot-toast";
-import UserCard from "../user/UserCard";
-import MoonIcon from '@mui/icons-material/DarkMode';
 import SunIcon from '@mui/icons-material/Brightness7';
-import { useColorMode } from "@/lib/contexts/ColorModeContext";
+import MoonIcon from '@mui/icons-material/DarkMode';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import { Badge, Box, IconButton, Menu, Paper } from '@mui/material';
+import Grid from '@mui/system/Unstable_Grid';
+import React from 'react';
+
+import Notifications from '@/components/Notification/NotificationList';
+import { useColorMode } from '@/lib/contexts/ColorModeContext';
+import { useUserCtx } from '@/lib/contexts/UserCtx';
+
+import GetImage from '../image/get';
 
 const TopBar = () => {
-  const { logout } = useAuth();
-  
+  // const MenuNotifications = () => {
+  const { colorMode, toggleColorMode } = useColorMode();
+
   const { user } = useUserCtx();
 
-  const {colorMode,toggleColorMode} = useColorMode();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-  const handleLogout = () => {
-    toast("GoodBye", {
-      icon: "👋",
-    });
-    setTimeout(() => {
-      logout();
-    }, 800);
-  }
-
+  const [random] = React.useState(Math.floor(Math.random() * 5));
 
   return (
-    <Paper>
-      <Grid container xs>
-        <Grid xs>
-          <UserCard
-            user={user!}
-            interaction={
-              <IconButton onClick={handleLogout}>
-                <LogoutIcon />
-              </IconButton>
-            }
+    <Paper
+      sx={{
+        width: '100%',
+        height: 60,
+      }}
+    >
+      <Grid
+        container
+        xs
+        sx={{
+          position: 'absolute',
+          left: 10,
+          top: 10,
+          zIndex: 1000,
+        }}
+      >
+        <Box
+          sx={{
+            width: 40,
+            height: 40,
+            borderRadius: 50,
+            overflow: 'hidden',
+          }}
+        >
+          <GetImage
+            fileID={user?.avatarS3Key || 'avatar/1.jpg'}
+            width={40}
+            height={40}
           />
-        </Grid>
-        <Grid xs>
-          <IconButton onClick={
-            toggleColorMode
-          }>
-            {
-              colorMode === "light" ? <MoonIcon /> : <SunIcon />
-            }
-          </IconButton>
-        </Grid>
-
+        </Box>
       </Grid>
+      <Grid
+        container
+        xs
+        sx={{
+          position: 'absolute',
+          right: 10,
+          top: 10,
+          zIndex: 1000,
+        }}
+      >
+        <IconButton onClick={(event) => setAnchorEl(event.currentTarget)}>
+          <Badge badgeContent={random} color="primary">
+            <NotificationsIcon />
+          </Badge>
+        </IconButton>
+        <IconButton onClick={toggleColorMode}>
+          {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+        </IconButton>
+      </Grid>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={() => setAnchorEl(null)}
+      >
+        <Notifications random={random} />
+      </Menu>
     </Paper>
   );
-  
 };
 
 export default TopBar;

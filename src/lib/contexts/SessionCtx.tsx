@@ -1,7 +1,7 @@
-import { Session } from 'aws-sdk/clients/appstream';
+import type { Session } from 'aws-sdk/clients/appstream';
 import React, { createContext, useContext } from 'react';
 
-interface ISession extends Session{
+interface ISession extends Session {
   username: string;
 }
 
@@ -13,29 +13,29 @@ interface SessionCtxType {
 
 const SessionCtx = createContext<SessionCtxType>({
   session: null,
-  setSession: () => { },
-  clearSession: () => { },
+  setSession: () => {},
+  clearSession: () => {},
 });
 
-const SessionCtxProvider: React.FC<React.PropsWithChildren<Record<string, unknown>>> = ({ children }) => {
+const SessionCtxProvider: React.FC<
+  React.PropsWithChildren<Record<string, unknown>>
+> = ({ children }) => {
   const isLoad = React.useRef(false);
   const [session, setSession] = React.useState<ISession | null>(null);
 
   React.useEffect(() => {
-    console.log('isLoad', isLoad.current)
     if (!isLoad.current) {
       isLoad.current = true;
       // check if session is in local storage
       const sessionStr = localStorage.getItem('session');
-      console.log('sessionStr', sessionStr)
       if (sessionStr) {
-        const session = JSON.parse(sessionStr) as ISession;
-        setSession(session);
+        const newSession = JSON.parse(sessionStr) as ISession;
+        setSession(newSession);
       }
     }
     return () => {
       isLoad.current = false;
-    }
+    };
   }, []);
 
   React.useEffect(() => {
@@ -46,7 +46,6 @@ const SessionCtxProvider: React.FC<React.PropsWithChildren<Record<string, unknow
       localStorage.removeItem('session');
     }
   }, [session]);
-  
 
   const clearSession = () => {
     setSession(null);
@@ -61,13 +60,14 @@ const SessionCtxProvider: React.FC<React.PropsWithChildren<Record<string, unknow
 
 const useSessionCtx = () => {
   const context = useContext(SessionCtx);
-  if(context === undefined) {
+  if (context === undefined) {
     throw new Error('useSessionCtx must be used within SessionCtxProvider');
   }
   return context;
-}
+};
 
 const withSession = <P extends object>(Component: React.ComponentType<P>) => {
+  // eslint-disable-next-line react/display-name
   return (props: P) => {
     return (
       <SessionCtxProvider>
@@ -76,7 +76,6 @@ const withSession = <P extends object>(Component: React.ComponentType<P>) => {
     );
   };
 };
-
 
 export { SessionCtxProvider, useSessionCtx, withSession };
 

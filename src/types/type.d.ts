@@ -1,4 +1,4 @@
-import { CognitoUser } from "amazon-cognito-identity-js"
+import type { CognitoUser } from 'amazon-cognito-identity-js';
 
 type TCognitoUserInfo = CognitoUser | null;
 

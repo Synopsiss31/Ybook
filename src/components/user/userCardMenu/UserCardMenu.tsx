@@ -1,16 +1,15 @@
-import { useSessionCtx } from "@/lib/contexts/SessionCtx";
-import { useGetCurrentUser, useReadOneUser } from "@/lib/hooks/API/users/useAPIUser";
-import useAuth from "@/lib/hooks/useAuth";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import LoginIcon from "@mui/icons-material/Login";
+import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
-import SettingsIcon from "@mui/icons-material/Settings";
-import { Box, MenuItem } from "@mui/material";
-import error from "next/error";
-import { useEffect } from "react";
-import { toast } from "react-hot-toast";
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import SettingsIcon from '@mui/icons-material/Settings';
+import { Box, MenuItem } from '@mui/material';
+import { toast } from 'react-hot-toast';
+
+import { useSessionCtx } from '@/lib/contexts/SessionCtx';
+import { useGetCurrentUser } from '@/lib/hooks/API/users/useAPIUser';
+import useAuth from '@/lib/hooks/useAuth';
 
 const MyAccountMenu = () => {
   return (
@@ -24,69 +23,62 @@ const MyAccountMenu = () => {
         Settings
       </MenuItem>
     </Box>
-  )
-}
+  );
+};
 
 const MyAuthMenu = () => {
   const { session } = useSessionCtx();
   const { logout } = useAuth();
 
-
-
-    const handleLogout = () => {
-            logout();
-            toast('Logged out successfully', {
-              icon: '👋',
-            })
-  }
+  const handleLogout = () => {
+    logout();
+    toast('Logged out successfully', {
+      icon: '👋',
+    });
+  };
 
   const handleLogin = () => {
     // TODO : handle click on login
     toast('Login not implemented yet', {
       icon: ' 🤷‍♂️',
-    })
+    });
+  };
 
-  }
-  
-  if (!session) 
+  if (!session)
     return (
       <Box>
         <MenuItem onClick={handleLogin}>
           <LoginIcon />
           Login
-        </MenuItem>,
+        </MenuItem>
+        ,
       </Box>
-    )
+    );
 
-    
   return (
     <Box>
       <MenuItem onClick={handleLogout}>
-            <LogoutIcon />
-            Logout
-      </MenuItem>,
+        <LogoutIcon />
+        Logout
+      </MenuItem>
+      ,
     </Box>
-  )
-}
+  );
+};
 
-const OtherUserMenu = ({ isFriend }: {
-  isFriend: boolean
-}) => {
-
+const OtherUserMenu = ({ isFriend }: { isFriend: boolean }) => {
   const handleAddFriend = () => {
     // TODO : handle click on add friend
     toast('Add friend not implemented yet', {
       icon: ' 🤷‍♂️',
-    })
-
-  }
+    });
+  };
   const handleRemoveFriend = () => {
     // TODO : handle click on remove friend
     toast('Remove friend not implemented yet', {
       icon: ' 🤷‍♂️',
-    })
-
-  }
+    });
+  };
 
   return (
     <Box>
@@ -107,29 +99,25 @@ const OtherUserMenu = ({ isFriend }: {
       )}
     </Box>
   );
-}
+};
 
 const UserCardMenu = ({ userId }: { userId?: number }) => {
+  const {
+    data: currentUser,
+    error: errorC,
+    isLoading: isLoadingC,
+  } = useGetCurrentUser();
 
-  const { data: currentUser, error: errorC, isLoading: isLoadingC } = useGetCurrentUser();
- 
   const { session } = useSessionCtx();
-    const {
-      data: user,
-      error,
-      isLoading,
-    } = {
-      data: null,
-      error: null,
-      isLoading: false,
-    };
- 
+  const { error, isLoading } = {
+    error: null,
+    isLoading: false,
+  };
 
   if (!userId || userId === currentUser?.id) {
     if (!session || !currentUser) return <MyAuthMenu />;
     return <MyAccountMenu />;
   }
-
 
   //   useReadOneUser(
   //   {
@@ -138,37 +126,19 @@ const UserCardMenu = ({ userId }: { userId?: number }) => {
   //     }
   //   }
   // );
-    
+
   const areFriends = false; // TODO : check if user is friend of current user
-  
- 
 
+  if (isLoading || isLoadingC) return <>...Loading</>;
 
-  if (isLoading || isLoadingC) return (
-    <>
-      ...Loading
-      </> 
-  );
-  
   if (error || errorC) {
     // logout()
-    return (
-      <>
-        Error
-      </>
-    );
+    return <>Error</>;
   }
-
 
   return <OtherUserMenu isFriend={areFriends} />;
 };
 
 export default UserCardMenu;
 
-export {
-  MyAccountMenu,
-  MyAuthMenu,
-  OtherUserMenu,
-  UserCardMenu
-
-};
+export { MyAccountMenu, MyAuthMenu, OtherUserMenu, UserCardMenu };
