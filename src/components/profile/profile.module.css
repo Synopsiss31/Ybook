@@ -1,0 +1,127 @@
+
+
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    border-radius: 10px;
+    background-color: white;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+.profil{
+    display: flex;
+    flex-direction: column;
+    height: 40%;
+    width: 100%;
+    background-color: white;
+    align-items: center;
+    
+}
+.profilinfo{
+    background-color: rgb(5, 81, 186);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    border-bottom: solid grey;
+}
+
+.img{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+
+.username{
+    padding: 10px;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+}
+.email{
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+}
+
+.information{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    bottom: 40px;
+    height: 60%;
+    width: 90%;
+    background-color: white;
+    border-radius: 15px;
+}
+
+.friend{
+    display: flex;
+    flex-direction: row;
+    bottom: 40px;
+    height: 16%;
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    background-color: white;
+    border-radius: 15px;
+    margin-bottom: 4vw;
+}
+
+.myfriend{
+    display: flex;
+    width: 80%;
+    align-items: center;
+    margin-left: 15px;
+}
+
+
+.title{
+    font-size: 20px;
+    color: rgb(0, 51, 122);
+    font-weight: bold;
+    margin-left: 15px;
+}
+
+.muicon {
+    transform: scale(1.2);
+    color: rgb(0, 51, 122);
+  }
+
+.rightfirend{
+    display: flex;
+    width: 20%;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.account{
+    display: flex;
+    flex-direction: row;
+    height: 70%;
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    background-color: white;
+    border-radius: 15px;
+    margin-bottom: 4vw;
+    padding-top: 3.5vw;
+}
+
+.myaccount{
+    display: flex;
+    width: 80%;
+    margin-left: 15px;
+}
+
+.rightaccount{
+    display: flex;
+    width: 20%;
+    justify-content: center;
+}
+
+.muiinfo {
+    transform: scale(1.2);
+  }
