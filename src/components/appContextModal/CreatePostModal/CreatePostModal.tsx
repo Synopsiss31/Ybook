@@ -112,7 +112,7 @@ const CreatePostModal = () => {
           htmlContent: content,
           attachments: [
             {
-              s3Key: signedPostUrl.key,
+              s3Key: signedPostUrl.s3Key,
               type: 'PICTURE',
             },
           ],

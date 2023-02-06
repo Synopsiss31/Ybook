@@ -14,37 +14,27 @@ import {
   Typography,
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { DEFAULT_URL } from '@/lib/hooks/API/users/useAPIUser';
 import { getIdToken } from '@/lib/utils/cognito';
 import type { PostModel } from '@/types/models';
+import { useUserCtx } from '@/lib/contexts/UserCtx';
 import GetImage from '../image/get';
 
 const Publication = ({ postId }: { postId: number }) => {
   if (!postId) throw new Error('postId is undefined');
 
+  const { user } = useUserCtx();
   const fetcher = async (url: string) => {
     const token = await getIdToken();
 
     const response = await fetch(`${DEFAULT_URL}${url}`, {
-      method: 'POST',
+      method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        include: {
-          postAttachments: true,
-          user: true,
-          postLikes: true,
-          postComments: {
-            include: {
-              user: true,
-            },
-          },
-        },
-      }),
     });
     if (!response.ok) {
       throw new Error('An error occurred while fetching the data.');
@@ -53,7 +43,7 @@ const Publication = ({ postId }: { postId: number }) => {
     return response.json();
   };
 
-  const { data, error, isLoading } = useSWR<PostModel[]>(
+  const { data, error, isLoading } = useSWR<PostModel>(
     `/post/read/${postId}`,
     fetcher,
     {
@@ -64,14 +54,28 @@ const Publication = ({ postId }: { postId: number }) => {
     }
   );
 
-  const post = data?.[0];
+  const post = data;
 
-  const [isLike, setIsLike] = useState(
-    !!post?.postLikes?.find((like) => like.userId === post?.userId)
+  const [isLikeCounted, setIsLikeCounted] = useState(
+    !!post?.postLikes?.find((like) => like.userId === user?.id)
   );
 
-  const [isLikeCounted] = useState(
-    !!post?.postLikes?.find((like) => like.userId === post?.userId)
+  const memoIsLikeCounted = useMemo(
+    () =>
+      setIsLikeCounted(
+        !!post?.postLikes?.find((like) => like.userId === user?.id)
+      ),
+    [post]
+  );
+
+  const [isLike, setIsLike] = useState(
+    !!post?.postLikes?.find((like) => like.userId === user?.id)
+  );
+
+  const memoIsLike = useMemo(
+    () =>
+      setIsLike(!!post?.postLikes?.find((like) => like.userId === user?.id)),
+    [post]
   );
 
   const [displayComment] = useState(true);
@@ -238,18 +242,17 @@ const Publication = ({ postId }: { postId: number }) => {
             </Typography>
           </Grid>
         </Grid>
-        {post.postAttachments?.length > 0 ||
-          (true && (
-            <Grid xs>
-              <GetImage
-                fileID={
-                  post.postAttachments[0]?.s3Key ?? 'default-post-image.jpg'
-                }
-                width={width}
-                height={width}
-              />
-            </Grid>
-          ))}
+        {post.postAttachments?.length && (
+          <Grid xs>
+            <GetImage
+              fileID={
+                post.postAttachments[0]?.s3Key ?? 'default-post-image.jpg'
+              }
+              width={width}
+              height={width}
+            />
+          </Grid>
+        )}
         <Grid container xs sx={{}}>
           <Grid
             xs={6}
