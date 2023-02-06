@@ -41,7 +41,7 @@
     "titleBar.inactiveForeground": "#e7e7e799"
   },
   "peacock.color": "#076430",
-  "workbench.colorTheme": "Abyss",
+  "workbench.colorTheme": "GitHub Light Default",
   "[javascript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
   },
