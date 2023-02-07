@@ -22,12 +22,13 @@ const GetImage = ({
 }) => {
   const asLoad = useRef(false);
 
+  const idNoSlash = fileID.replaceAll('/', '%2F');
+
   const fetcher = async (url: string) => {
     if (asLoad.current) return;
-
     const token = await getIdToken();
 
-    const response = await fetch(`${DEFAULT_URL}${url}/${fileID}`, {
+    const response = await fetch(`${DEFAULT_URL}${url}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -42,7 +43,7 @@ const GetImage = ({
   };
 
   const { data, error, isLoading } = useSWR<{ url: string }>(
-    `/image/url`,
+    `/image/url/${idNoSlash}`,
     fetcher,
     {
       revalidateOnFocus: false,

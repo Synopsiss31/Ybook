@@ -21,14 +21,10 @@ const UserCtxProvider: React.FC<React.PropsWithChildren<unknown>> = ({
     const token = await getIdToken();
 
     const response = await fetch(`${DEFAULT_URL}${url}`, {
-      method: 'POST',
+      method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        limit: 10,
-        offset: 0,
-      }),
     });
 
     if (!response.ok) {
