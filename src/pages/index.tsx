@@ -1,7 +1,5 @@
 // eslint-disable-next-line import/no-named-as-default
-import ReplayIcon from '@mui/icons-material/Replay';
-import { Box, IconButton } from '@mui/material';
-import { useRouter } from 'next/router';
+import { Box } from '@mui/material';
 import useSWR from 'swr';
 
 import { DEFAULT_URL } from '@/lib/hooks/API/users/useAPIUser';
@@ -11,8 +9,6 @@ import type { PostModel } from '@/types/models';
 import Publication from '../components/publication/Publication';
 
 function Index() {
-  const router = useRouter();
-
   const fetcher = async (url: string) => {
     const token = await getIdToken();
 
@@ -20,10 +16,11 @@ function Index() {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         limit: 10,
-        offset: 0,
+        page: 0,
       }),
     });
 
@@ -75,10 +72,6 @@ function Index() {
       </Box>
     );
 
-  const handleReload = () => {
-    router.push(router.asPath);
-  };
-
   return (
     <Box
       sx={{
@@ -91,17 +84,6 @@ function Index() {
         overflowY: 'scroll',
       }}
     >
-      <IconButton
-        onClick={handleReload}
-        sx={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          zIndex: 1000,
-        }}
-      >
-        <ReplayIcon />
-      </IconButton>
       {Array.isArray(posts) &&
         posts.map((post: PostModel) => (
           <Box key={post.id} sx={{ m: 2 }}>

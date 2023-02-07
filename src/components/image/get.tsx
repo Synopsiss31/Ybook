@@ -5,7 +5,7 @@
 
 import { Box, Typography } from '@mui/material';
 import Image from 'next/image';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import useSWR from 'swr';
 
 import { DEFAULT_URL } from '@/lib/hooks/API/users/useAPIUser';
@@ -15,10 +15,16 @@ const GetImage = ({
   fileID,
   width,
   height,
+  alt,
+  fullHeight,
+  fullWidth,
 }: {
   fileID: string;
   width?: number;
   height?: number;
+  alt?: string;
+  fullHeight?: boolean;
+  fullWidth?: boolean;
 }) => {
   const asLoad = useRef(false);
 
@@ -42,6 +48,19 @@ const GetImage = ({
     return response.json();
   };
 
+  const altText = useMemo(() => {
+    if (!alt) return '';
+    if (alt.split(' ').length > 1) {
+      // return 1 letter of each word
+      return alt
+        .split(' ')
+        .map((word) => word[0])
+        .join('')
+        .toLocaleUpperCase();
+    }
+    return alt[0]?.toLocaleUpperCase() || '';
+  }, [alt]);
+
   const { data, error, isLoading } = useSWR<{ url: string }>(
     `/image/url/${idNoSlash}`,
     fetcher,
@@ -59,32 +78,72 @@ const GetImage = ({
     };
   }, []);
 
+  const [errorImage, setErrorImage] = useState(false);
+
+  const [boxRef, setBoxRef] = useState<HTMLDivElement | null>(null);
+
+  const [imageDimensions, setImageDimensions] = useState<{
+    width: number;
+    height: number;
+  }>({
+    width: 0,
+    height: 0,
+  });
+
+  useEffect(() => {
+    if (!boxRef) return;
+
+    const { width: boxWidth, height: boxHeight } =
+      boxRef.getBoundingClientRect();
+
+    setImageDimensions({
+      width: boxWidth,
+      height: boxHeight,
+    });
+  }, [boxRef]);
+
   return (
     <Box
       sx={{
-        width: width || 500,
-        height: height || 500,
+        width: fullWidth ? '100%' : width || 500,
+        height: fullHeight ? '100%' : height || 500,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'grey.500',
+        userSelect: 'none',
+        userDrag: 'none',
+        overflow: 'hidden',
       }}
+      ref={setBoxRef}
     >
       {(() => {
-        if (isLoading) return <Typography variant="h1">Loading...</Typography>;
-
-        if (error || !data) return <Typography variant="h1">Error</Typography>;
-
-        asLoad.current = true;
+        if (errorImage || isLoading || error || !data)
+          return (
+            <Box
+              sx={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Typography>{altText}</Typography>
+            </Box>
+          );
 
         return (
           <Image
             src={data.url}
-            width={width || 500}
-            height={height || 500}
-            alt={'image'}
+            {...imageDimensions}
+            alt={altText}
             loader={({ src }) => {
+              asLoad.current = true;
               return src;
+            }}
+            onError={() => {
+              setErrorImage(true);
             }}
           />
         );

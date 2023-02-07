@@ -41,3 +41,4 @@ local
 
 # vercel
 .vercel
+public/sw.js.map

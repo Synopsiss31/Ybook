@@ -6,9 +6,9 @@ import { DEFAULT_URL } from '@/lib/hooks/API/users/useAPIUser';
 import { getIdToken } from '@/lib/utils/cognito';
 import type { PostModel } from '@/types/models';
 
-import Publication from './Publication';
+import Publication from '../publication/Publication';
 
-const Publications = () => {
+function MyPosts() {
   const fetcher = async (url: string) => {
     const token = await getIdToken();
 
@@ -16,10 +16,11 @@ const Publications = () => {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         limit: 10,
-        offset: 0,
+        page: 0,
       }),
     });
 
@@ -34,7 +35,7 @@ const Publications = () => {
     data: posts,
     error,
     isLoading,
-  } = useSWR<PostModel[]>(`/post/read`, fetcher, {
+  } = useSWR<PostModel[]>(`/post/me`, fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     refreshWhenHidden: false,
@@ -91,6 +92,6 @@ const Publications = () => {
         ))}
     </Box>
   );
-};
+}
 
-export default Publications;
+export default MyPosts;

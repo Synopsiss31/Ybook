@@ -79,6 +79,7 @@ const ColorModeProvider = ({ children }: { children: React.ReactNode }) => {
           MuiPaper: {
             styleOverrides: {
               root: {
+                userSelect: 'none',
                 borderRadius: 12,
                 ...(colorMode === 'light' && {
                   boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.1)',

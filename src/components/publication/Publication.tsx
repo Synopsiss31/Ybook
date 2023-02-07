@@ -1,82 +1,25 @@
 /* eslint-disable no-nested-ternary */
 // eslint-disable-next-line simple-import-sort/imports
-import Comment from '@mui/icons-material/ChatBubbleOutline';
-import Like from '@mui/icons-material/FavoriteBorder';
-import ActiveLike from '@mui/icons-material/FavoriteOutlined';
+import { PostProvider, usePostCtx } from '@/lib/contexts/PostContext';
+import CommentIcon from '@mui/icons-material/ChatBubbleOutline';
+import LikeIcon from '@mui/icons-material/FavoriteBorder';
+import ActiveLikeIcon from '@mui/icons-material/FavoriteOutlined';
 import {
   Button,
   Divider,
   Fade,
   IconButton,
   Paper,
-  Skeleton,
   TextField,
   Typography,
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useEffect, useMemo, useState } from 'react';
-import useSWR from 'swr';
-import { DEFAULT_URL } from '@/lib/hooks/API/users/useAPIUser';
-import { getIdToken } from '@/lib/utils/cognito';
-import type { PostModel } from '@/types/models';
-import { useUserCtx } from '@/lib/contexts/UserCtx';
+import { useEffect, useState } from 'react';
+import Comment from '../comment/Comment';
 import GetImage from '../image/get';
 
-const Publication = ({ postId }: { postId: number }) => {
-  if (!postId) throw new Error('postId is undefined');
-
-  const { user } = useUserCtx();
-  const fetcher = async (url: string) => {
-    const token = await getIdToken();
-
-    const response = await fetch(`${DEFAULT_URL}${url}`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    if (!response.ok) {
-      throw new Error('An error occurred while fetching the data.');
-    }
-
-    return response.json();
-  };
-
-  const { data, error, isLoading } = useSWR<PostModel>(
-    `/post/read/${postId}`,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      refreshWhenHidden: false,
-      refreshWhenOffline: false,
-    }
-  );
-
-  const post = data;
-
-  const [isLikeCounted, setIsLikeCounted] = useState(
-    !!post?.postLikes?.find((like) => like.userId === user?.id)
-  );
-
-  const memoIsLikeCounted = useMemo(
-    () =>
-      setIsLikeCounted(
-        !!post?.postLikes?.find((like) => like.userId === user?.id)
-      ),
-    [post]
-  );
-
-  const [isLike, setIsLike] = useState(
-    !!post?.postLikes?.find((like) => like.userId === user?.id)
-  );
-
-  const memoIsLike = useMemo(
-    () =>
-      setIsLike(!!post?.postLikes?.find((like) => like.userId === user?.id)),
-    [post]
-  );
+const Publication = () => {
+  const { post, toggleLike, addComment } = usePostCtx();
 
   const [displayComment] = useState(true);
 
@@ -85,38 +28,6 @@ const Publication = ({ postId }: { postId: number }) => {
   const [commenting, setCommenting] = useState(false);
 
   const [comment, setComment] = useState('');
-
-  const handleLike = async () => {
-    // api call
-    if (!isLike) {
-      const response = await fetch(`${DEFAULT_URL}/post/like/${postId}`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${await getIdToken()}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error('An error occurred while fetching the data.');
-      } else {
-        setIsLike(true);
-      }
-      return;
-    }
-
-    if (isLike) {
-      const response = await fetch(`${DEFAULT_URL}/post/like/${postId}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${await getIdToken()}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error('An error occurred while fetching the data.');
-      } else {
-        setIsLike(false);
-      }
-    }
-  };
 
   useEffect(() => {
     // listen to resize
@@ -140,47 +51,22 @@ const Publication = ({ postId }: { postId: number }) => {
     };
   }, []);
 
-  if (isLoading || !post?.htmlContent)
-    return (
-      <Skeleton
-        variant="rectangular"
-        width={width}
-        height={width + width * 0.1}
-        sx={{
-          borderRadius: 10,
-        }}
-      ></Skeleton>
-    );
+  const isLike = post?.postLikes?.some(
+    (like) => like.userId === post?.user?.id
+  );
 
-  if (error)
-    return (
-      <Typography variant="h6" component="h2">
-        Error
-      </Typography>
-    );
+  const nbLikes = post?.postLikes?.length ?? 0;
 
-  const nbLike = post.postLikes?.length ?? 0;
-
-  const handleComment = async () => {
-    // send comment to api
-    if (comment === '') return;
-    setCommenting(false);
-    const response = await fetch(`${DEFAULT_URL}/post/comment/`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${await getIdToken()}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        postId,
-        text: comment,
-      }),
-    });
-    if (!response.ok) {
-      throw new Error('An error occurred while fetching the data.');
-    } else {
+  const handleComment = () => {
+    if (comment) {
+      addComment(comment);
       setComment('');
+      setCommenting(false);
     }
+  };
+
+  const handleLike = () => {
+    toggleLike();
   };
 
   return (
@@ -242,7 +128,7 @@ const Publication = ({ postId }: { postId: number }) => {
             </Typography>
           </Grid>
         </Grid>
-        {post.postAttachments?.length && (
+        {!!post.postAttachments?.length && (
           <Grid xs>
             <GetImage
               fileID={
@@ -276,19 +162,13 @@ const Publication = ({ postId }: { postId: number }) => {
                 sx={{ position: 'relative', m: 1 }}
               >
                 <Fade in={isLike} timeout={300}>
-                  <ActiveLike color="error" sx={{ position: 'absolute' }} />
+                  <ActiveLikeIcon color="error" sx={{ position: 'absolute' }} />
                 </Fade>
                 <Fade in={!isLike} timeout={300}>
-                  <Like sx={{ position: 'absolute' }} />
+                  <LikeIcon sx={{ position: 'absolute' }} />
                 </Fade>
               </IconButton>
-              <Typography component="span">
-                {isLike && !isLikeCounted
-                  ? nbLike + 1
-                  : !isLike && isLikeCounted
-                  ? nbLike - 1
-                  : nbLike}
-              </Typography>
+              <Typography component="span">{nbLikes}</Typography>
             </Grid>
             <Grid
               xs
@@ -297,9 +177,9 @@ const Publication = ({ postId }: { postId: number }) => {
                 alignItems: 'center',
               }}
             >
-              <Comment />
+              <CommentIcon />
               <Typography component="span">
-                {post.postComments?.length ?? 0}
+                {post?.postComments?.length}
               </Typography>
             </Grid>
           </Grid>
@@ -333,34 +213,18 @@ const Publication = ({ postId }: { postId: number }) => {
           <Grid xs>
             <Divider />
             <Grid>
-              <Grid>
-                {post.postComments?.map((currentComment) => {
-                  return (
-                    <Grid key={currentComment.id} container direction="column">
-                      <Grid>
-                        <Typography
-                          component="span"
-                          sx={{
-                            fontSize: '0.8rem',
-                          }}
-                          color={
-                            currentComment.user.id === post.user?.id
-                              ? 'primary'
-                              : 'secondary'
-                          }
-                        >
-                          @
-                          {`${currentComment.user.firstname} ${currentComment.user.lastname}`}
-                        </Typography>
-                      </Grid>
-                      <Grid>
-                        <Typography component="span">
-                          {currentComment.text}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  );
-                })}
+              <Grid
+                sx={{
+                  maxHeight: 200,
+                  overflowY: 'auto',
+                }}
+              >
+                {post?.postComments?.map((currentComment) => (
+                  <>
+                    <Comment key={currentComment.id} comment={currentComment} />
+                    <Divider />
+                  </>
+                ))}
               </Grid>
               <Grid>
                 <TextField
@@ -371,10 +235,22 @@ const Publication = ({ postId }: { postId: number }) => {
                   variant="standard"
                   onFocus={() => setCommenting(true)}
                   onBlur={() => setCommenting(false)}
-                  onChange={(e) => setComment(e.target.value)}
+                  value={comment}
+                  onChange={(e) => {
+                    setComment(e.target.value);
+                  }}
                 />
+                <Typography
+                  sx={{
+                    textAlign: 'right',
+                    fontSize: '0.8rem',
+                    color: comment.length > 250 ? '#c63c45' : 'grey',
+                  }}
+                >
+                  {comment.length}/250
+                </Typography>
               </Grid>
-              <Fade in={commenting} timeout={300}>
+              <Fade in={commenting && !(comment.length > 250)} timeout={300}>
                 <Grid>
                   <Button
                     onClick={handleComment}
@@ -393,4 +269,12 @@ const Publication = ({ postId }: { postId: number }) => {
   );
 };
 
-export default Publication;
+const PublicationWithPost = ({ postId, ...props }: any) => {
+  return (
+    <PostProvider postId={postId}>
+      <Publication {...props} />
+    </PostProvider>
+  );
+};
+
+export default PublicationWithPost;

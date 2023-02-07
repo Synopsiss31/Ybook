@@ -3,11 +3,11 @@ import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 import { useSwiper } from 'swiper/react';
 
-interface IAuthSwitchProps {
+interface IProfileSwitchProps {
   slot?: string;
 }
 
-const AuthSwitch: React.FC<IAuthSwitchProps> = ({ slot }) => {
+const ProfileSwitch: React.FC<IProfileSwitchProps> = ({ slot }) => {
   const [slideIndex, setslideIndex] = React.useState(0);
 
   const swiper = useSwiper();
@@ -49,4 +49,4 @@ const AuthSwitch: React.FC<IAuthSwitchProps> = ({ slot }) => {
   );
 };
 
-export default AuthSwitch;
+export default ProfileSwitch;
