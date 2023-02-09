@@ -42,3 +42,7 @@ local
 # vercel
 .vercel
 public/sw.js.map
+.vscode/extensions.json
+.vscode/launch.json
+.vscode/settings.json
+.vscode/tasks.json
