@@ -6,44 +6,58 @@ import {
   Typography,
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 
 import UserCard from '@/components/user/UserCard';
 import { DEFAULT_URL } from '@/lib/hooks/API/users/useAPIUser';
 import { getIdToken } from '@/lib/utils/cognito';
+import type { FriendshipModel, UserModel } from '@/types/models';
 
 import FriendRequest from './FriendRequest';
 
 // eslint-disable-next-line import/no-cycle
 
 const FriendsModal = () => {
-  const [friends, setFriends] = useState([]);
-  const [asking, setAsking] = useState([]);
+  const [friends, setFriends] = useState<UserModel[]>([]);
+  const [asking, setAsking] = useState<FriendshipModel[]>([]);
 
-  const findFriend = async (e) => {
-    if (e.target.value !== '') {
-      const token = await getIdToken();
+  const [reqString, setReqString] = useState('');
 
-      const resp = await fetch(`${DEFAULT_URL}/friend/get`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          filter: e.target.value,
-        }),
-      });
-
-      if (!resp.ok) {
-        throw new Error('An error occurred while fetching the data.');
-      }
-      setFriends(await resp.json());
-    } else {
-      setFriends([]);
-    }
+  const handleChange = (e: any) => {
+    if (e?.target) setReqString(e.target.value);
   };
+
+  useEffect(() => {
+    const findFriend = async () => {
+      if (reqString !== '') {
+        const token = await getIdToken();
+
+        const resp = await fetch(`${DEFAULT_URL}/friend/get`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            filter: reqString,
+          }),
+        });
+
+        if (!resp.ok) {
+          throw new Error('An error occurred while fetching the data.');
+        }
+        setFriends(await resp.json());
+      } else {
+        setFriends([]);
+      }
+    };
+
+    const timer = setTimeout(findFriend, 200);
+
+    return () => clearTimeout(timer);
+  }, [reqString]);
+
   const fetcher = async (url: string) => {
     const token = await getIdToken();
 
@@ -144,7 +158,8 @@ const FriendsModal = () => {
                     width: '100%',
                   }}
                   placeholder={'Rechercher un ami...'}
-                  onChange={findFriend}
+                  onChange={handleChange}
+                  value={reqString}
                 ></TextField>
                 <Grid>
                   {Array.isArray(friends) &&
@@ -172,8 +187,8 @@ const FriendsModal = () => {
                   {Array.isArray(asking) &&
                     asking.map((id) => (
                       <FriendRequest
-                        key={id}
-                        user={id.fromId}
+                        key={id.id}
+                        userID={id.fromId}
                         id={id.id}
                       ></FriendRequest>
                     ))}

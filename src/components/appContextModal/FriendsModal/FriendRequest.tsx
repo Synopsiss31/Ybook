@@ -10,17 +10,16 @@ import GetImage from '@/components/image/get';
 import { useUserCtx } from '@/lib/contexts/UserCtx';
 import { DEFAULT_URL } from '@/lib/hooks/API/users/useAPIUser';
 import { getIdToken } from '@/lib/utils/cognito';
-import type { UserModel } from '@/types/models';
 // eslint-disable-next-line import/no-named-as-default
 
 interface IUserCardProps {
-  user: UserModel;
+  userID: number;
   id: number;
   /* MUI IconButton */ interaction?: React.ReactNode;
   /* MUI MenuItem */ menuItems?: React.ReactNode[];
 }
 
-const FriendRequest: React.FC<IUserCardProps> = ({ user, id }) => {
+const FriendRequest: React.FC<IUserCardProps> = ({ userID, id }) => {
   const userCo = useUserCtx();
   const [chose, setChose] = useState(false);
 
@@ -42,7 +41,7 @@ const FriendRequest: React.FC<IUserCardProps> = ({ user, id }) => {
   };
 
   const { data } = useSWR(
-    isNaN(parseInt(user)) === false ? `/friend/${user}` : null,
+    isNaN(parseInt(userID)) === false ? `/friend/${userID}` : null,
     fetcher,
     {
       revalidateOnFocus: false,
@@ -52,7 +51,7 @@ const FriendRequest: React.FC<IUserCardProps> = ({ user, id }) => {
     }
   );
 
-  if (!user) return null;
+  if (!userID) return null;
 
   const rec = data;
 
@@ -164,9 +163,7 @@ const FriendRequest: React.FC<IUserCardProps> = ({ user, id }) => {
           }}
         >
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {rec
-              ? `${rec.firstname} ${rec.lastname}`
-              : `${user?.firstname} ${user?.lastname}`}
+            {rec ? `${rec.firstname} ${rec.lastname}` : null}
           </Typography>
         </Grid>
         <IconButton onClick={handleAddClick} disabled={chose}>
