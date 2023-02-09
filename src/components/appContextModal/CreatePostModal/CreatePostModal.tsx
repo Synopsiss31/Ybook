@@ -142,106 +142,102 @@ const CreatePostModal = () => {
   };
 
   return (
-    <>
-      <DialogTitle id="alert-dialog-title">{'Create Post'}</DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          <Grid
-            container
-            sx={{
-              p: 2,
-              width: 250,
+  <Grid
+    container
+    sx={{
+      p: 2,
+      width: 250,
+    }}
+    direction="column"
+    overflow="hidden"
+  >
+    <Grid xs>
+      <TextField
+        id="outlined-multiline-static"
+        label="Content"
+        multiline
+        rows={5}
+        fullWidth
+        variant="outlined"
+        onChange={(e) => {
+          setContent(e.target.value);
+        }}
+      />
+    </Grid>
+    <Grid xs>
+      <Grid>
+        <Grid>
+          <Button
+            onClick={() => {
+              fileInputRef.current?.click();
             }}
-            direction="column"
-            overflow="hidden"
           >
-            <Grid xs>
-              <TextField
-                id="outlined-multiline-static"
-                label="Content"
-                multiline
-                rows={5}
-                fullWidth
-                variant="outlined"
-                onChange={(e) => {
-                  setContent(e.target.value);
-                }}
-              />
-            </Grid>
-            <Grid xs>
-              <Grid>
-                <Grid>
-                  <Button
-                    onClick={() => {
-                      fileInputRef.current?.click();
-                    }}
-                  >
-                    Upload Image
-                    <input
-                      type="file"
-                      accept="image/*"
-                      ref={fileInputRef}
-                      onChange={handleImageChange}
-                      style={{
-                        display: 'none',
-                      }}
-                    />
-                  </Button>
-                </Grid>
-                <Fade in={!!img.src}>
-                  <Grid>
-                    <IconButton
-                      onClick={() => {
-                        setDisplayImg(!displayImg);
-                      }}
-                    >
-                      {displayImg ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                    </IconButton>
-                  </Grid>
-                </Fade>
-              </Grid>
-              <Fade in={displayImg} unmountOnExit>
-                <Grid
-                  xs
-                  sx={{
-                    overflow: 'hidden',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: '100%',
-                      height: '100%',
-                      overflow: 'scroll',
-                      border: '1px solid',
-                      borderColor: 'grey.500',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      m: 1,
-                    }}
-                  >
-                    <NextImage {...img} loader={({ src }) => src} />
-                  </Box>
-                </Grid>
-              </Fade>
-            </Grid>
+            Upload Image
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              onChange={handleImageChange}
+              style={{
+                display: 'none',
+              }}
+            />
+          </Button>
+        </Grid>
+        <Fade in={!!img.src}>
+          <Grid>
+            <IconButton
+              onClick={() => {
+                setDisplayImg(!displayImg);
+              }}
+            >
+              {displayImg ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </IconButton>
           </Grid>
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
+        </Fade>
+      </Grid>
+      <Fade in={displayImg} unmountOnExit>
+        <Grid
+          xs
+          sx={{
+            overflow: 'hidden',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Box
+            sx={{
+              width: '100%',
+              height: '100%',
+              overflow: 'scroll',
+              border: '1px solid',
+              borderColor: 'grey.500',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              m: 1,
+            }}
+          >
+            <NextImage {...img} loader={({ src }) => src} />
+          </Box>
+        </Grid>
+      </Fade>
+    </Grid>
+    <Grid xs container>
+      <Grid xs>
         <Button onClick={handleCreate} color="primary">
           Create
         </Button>
-
+      </Grid/>
+      <Grid xs>
         <Button onClick={handleClose} color="primary">
           Cancel
         </Button>
-      </DialogActions>
-    </>
-  );
+      </Grid>
+    </Grid>
+  </Grid>
+    );
 };
 
 export default CreatePostModal;
