@@ -14,6 +14,7 @@ const AppFabButton = () => {
         dispatch({ type: 'SET_MODAL', payload: Modals.CreatePublication });
         break;
       case Pages.Profile:
+        dispatch({ type: 'SET_MODAL', payload: Modals.Friends });
         break;
       case Pages.Chat:
         // search for a user (to add as a friend)

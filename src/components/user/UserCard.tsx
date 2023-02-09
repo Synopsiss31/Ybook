@@ -1,11 +1,18 @@
+import HowToRegRoundedIcon from '@mui/icons-material/HowToRegRounded';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
 import { Box, IconButton, Menu, Paper, Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
-import Image from 'next/image';
-import React from 'react';
+import React, { useState } from 'react';
+import toast from 'react-hot-toast';
+import useSWR from 'swr';
 
+import { useUserCtx } from '@/lib/contexts/UserCtx';
+import { DEFAULT_URL } from '@/lib/hooks/API/users/useAPIUser';
+import { getIdToken } from '@/lib/utils/cognito';
 import type { UserModel } from '@/types/models';
 
+import GetImage from '../image/get';
 // eslint-disable-next-line import/no-named-as-default
 import UserCardMenu from './userCardMenu/UserCardMenu';
 
@@ -22,10 +29,72 @@ const UserCard: React.FC<IUserCardProps> = ({ user, interaction }) => {
       throw new Error('interaction must be a MUI IconButton');
   }
 
+  const userCo = useUserCtx();
+
+  const fetcher = async (url: string) => {
+    const token = await getIdToken();
+
+    const response = await fetch(`${DEFAULT_URL}${url}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error('An error occurred while fetching the data.');
+    }
+
+    return response.json();
+  };
+
+  const [validated, setValidated] = useState(false);
+
+  const { data } = useSWR(
+    isNaN(parseInt(user)) === false ? `/friend/${user}` : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      refreshWhenHidden: false,
+      refreshWhenOffline: false,
+    }
+  );
+
+  if (!user) return null;
+
+  const rec = data;
+
+  const handleAddClick = async () => {
+    const token = await getIdToken();
+    const resp = await fetch(
+      `${DEFAULT_URL}/friend/create/${userCo.user.id}/${rec.id}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    if (!resp.ok) {
+      throw new Error('An error occurred while fetching the data.');
+    }
+
+    toast('Invitation envoyée', {
+      icon: '✅',
+    });
+    setValidated(true);
+  };
+
   // if (menuItems) {
-  //   /*Verify menuItems is an array of MUI MenuItem */
-  //   if (!menuItems.every(item => (React.isValidElement(item) && item.type == MenuItem))
-  //   ) throw new Error("menuItems must be an array of MUI MenuItem")
+  //   /* Verify menuItems is an array of MUI MenuItem */
+  //   if (
+  //     !menuItems.every(
+  //       (item) => React.isValidElement(item) && item.type == MenuItem
+  //     )
+  //   )
+  //     throw new Error('menuItems must be an array of MUI MenuItem');
   // }
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -37,8 +106,6 @@ const UserCard: React.FC<IUserCardProps> = ({ user, interaction }) => {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
-
-  if (!user) return null;
 
   return (
     <Paper
@@ -73,15 +140,20 @@ const UserCard: React.FC<IUserCardProps> = ({ user, interaction }) => {
               overflow: 'hidden',
             }}
           >
-            <Image
-              src="https://www.shutterstock.com/image-vector/people-illustrations-profile-examples-260nw-1270121050.jpg"
-              loader={({ src, width, quality }) => {
-                return `${src}?w=${width}&q=${quality || 75}`;
-              }}
-              alt="Picture of the author"
-              width={50}
-              height={50}
-            />
+            {rec ? (
+              rec.avatarS3Key ? (
+                <GetImage fileID={rec.avatarS3Key} width={50} height={50} />
+              ) : (
+                <GetImage
+                  fileID={rec.avatarS3Key || ''}
+                  alt={`${rec.firstname} ${rec.lastname}`}
+                  width={50}
+                  height={50}
+                />
+              )
+            ) : (
+              <GetImage fileID={''} alt={`N C`} width={50} height={50} />
+            )}
           </Box>
         </Grid>
 
@@ -93,7 +165,9 @@ const UserCard: React.FC<IUserCardProps> = ({ user, interaction }) => {
           }}
         >
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {`${user?.firstname} ${user?.lastname}`}
+            {rec
+              ? `${rec.firstname} ${rec.lastname}`
+              : `${user?.firstname} ${user?.lastname}`}
           </Typography>
         </Grid>
         {interaction && (
@@ -113,9 +187,18 @@ const UserCard: React.FC<IUserCardProps> = ({ user, interaction }) => {
             </Box>
           </Grid>
         )}
-        <IconButton onClick={handleMenuClick}>
-          <MoreVertIcon />
-        </IconButton>
+        {validated ? (
+          <HowToRegRoundedIcon />
+        ) : !rec ? (
+          <IconButton onClick={handleMenuClick}>
+            <MoreVertIcon />
+          </IconButton>
+        ) : (
+          <IconButton onClick={handleAddClick}>
+            <PersonAddAlt1RoundedIcon />
+          </IconButton>
+        )}
+
         <Menu
           anchorEl={anchorEl}
           keepMounted

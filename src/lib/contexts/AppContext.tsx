@@ -48,6 +48,10 @@ export const Modals = {
     name: 'CreatePublication',
     value: 1,
   },
+  Friends: {
+    name: 'Friends',
+    value: 2,
+  },
   // ...
 };
 
