@@ -12,7 +12,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { usePostCtx } from '@/lib/contexts/PostContext';
 import { useUserCtx } from '@/lib/contexts/UserCtx';
-import type { PostCommentModel } from '@/types/models/PostCommentModel';
+import type { PostCommentModel } from '@/types';
 
 interface ICommentProps {
   comment: PostCommentModel;

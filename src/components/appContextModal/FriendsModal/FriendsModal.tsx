@@ -8,8 +8,6 @@ import { DEFAULT_URL } from '@/lib/hooks/API/users/useAPIUser';
 import { getIdToken } from '@/lib/utils/cognito';
 import type { FriendshipModel, UserModel } from '@/types/models';
 
-import FriendRequest from './FriendRequest';
-
 // eslint-disable-next-line import/no-cycle
 
 const FriendsModal = () => {
@@ -109,9 +107,9 @@ const FriendsModal = () => {
         overflow: 'hidden',
         justifyContent: 'center',
         alignItems: 'center',
+        overflowY: 'auto',
       }}
       direction="column"
-      overflow="hidden"
       xs
       spacing={2}
     >
@@ -189,12 +187,10 @@ const FriendsModal = () => {
           }}
         >
           {Array.isArray(asking) &&
-            asking.map((id) => (
-              <FriendRequest
-                key={id.id}
-                userID={id.fromId}
-                id={id.id}
-              ></FriendRequest>
+            asking.map((friendship) => (
+              <Grid key={friendship.id} xs>
+                <UserCard user={friendship.from} />
+              </Grid>
             ))}
         </Grid>
       </Grid>

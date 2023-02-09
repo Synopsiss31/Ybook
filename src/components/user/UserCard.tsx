@@ -1,5 +1,6 @@
 /* eslint-disable no-nested-ternary */
-import HowToRegRoundedIcon from '@mui/icons-material/HowToRegRounded';
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
 import { Box, IconButton, Menu, Paper, Typography } from '@mui/material';
@@ -34,12 +35,13 @@ const UserCard: React.FC<IUserCardProps> = ({ user, interaction }) => {
   const { user: currentUser } = useUserCtx();
 
   const [friendRequestExist, setFriendRequestExist] = useState({
+    id: undefined as number | undefined,
     asking: false,
     accepted: false,
   });
 
   const { data } = useSWR<FriendshipModel>(
-    `/friend/${user.id}`,
+    `/friend/friend/${user.id}`,
     async (url) => {
       const token = await getIdToken();
 
@@ -63,8 +65,10 @@ const UserCard: React.FC<IUserCardProps> = ({ user, interaction }) => {
   );
 
   useEffect(() => {
+    console.log(data);
     if (data && data.status !== FriendshipStatus.IGNORED) {
       setFriendRequestExist({
+        id: data.id,
         asking: data.fromId === currentUser?.id,
         accepted: data.status === FriendshipStatus.ACCEPTED,
       });
@@ -90,9 +94,12 @@ const UserCard: React.FC<IUserCardProps> = ({ user, interaction }) => {
     toast('Invitation envoyée', {
       icon: '✅',
     });
-    setFriendRequestExist({
-      asking: true,
-      accepted: false,
+    resp.json().then((d) => {
+      setFriendRequestExist({
+        id: d.id,
+        asking: true,
+        accepted: false,
+      });
     });
   };
 
@@ -104,6 +111,63 @@ const UserCard: React.FC<IUserCardProps> = ({ user, interaction }) => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleAccept = async () => {
+    const token = await getIdToken();
+    console.log(friendRequestExist);
+    const resp = await fetch(`${DEFAULT_URL}/friend/update/`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        friendshipId: friendRequestExist.id,
+        status: 'ACCEPTED',
+      }),
+    });
+    if (!resp.ok) {
+      throw new Error('An error occurred while fetching the data.');
+    }
+
+    toast(`Demande d'amitié acceptée`, {
+      icon: '✅',
+    });
+
+    setFriendRequestExist({
+      id: friendRequestExist.id,
+      asking: false,
+      accepted: true,
+    });
+  };
+
+  const handleRefuse = async () => {
+    const token = await getIdToken();
+    const resp = await fetch(`${DEFAULT_URL}/friend/update/`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        friendshipId: friendRequestExist.id,
+        status: 'IGNORED',
+      }),
+    });
+    if (!resp.ok) {
+      throw new Error('An error occurred while fetching the data.');
+    }
+
+    toast(`Demande d'amitié refusée`, {
+      icon: '❌',
+    });
+
+    setFriendRequestExist({
+      id: undefined,
+      asking: false,
+      accepted: false,
+    });
   };
 
   return (
@@ -176,19 +240,39 @@ const UserCard: React.FC<IUserCardProps> = ({ user, interaction }) => {
             </Box>
           </Grid>
         )}
-        {friendRequestExist.asking ? (
-          friendRequestExist.accepted ? (
-            <IconButton onClick={handleMenuClick}>
-              <MoreVertIcon />
-            </IconButton>
-          ) : (
-            <HowToRegRoundedIcon />
+        {(() => {
+          // if () return <HowToRegRoundedIcon />;
+          if (friendRequestExist.asking && friendRequestExist.accepted)
+            return (
+              <IconButton onClick={handleMenuClick}>
+                <MoreVertIcon />
+              </IconButton>
+            );
+
+          if (
+            friendRequestExist.id === 0 &&
+            !friendRequestExist.asking &&
+            !friendRequestExist.accepted
           )
-        ) : (
-          <IconButton onClick={handleAddClick}>
-            <PersonAddAlt1RoundedIcon />
-          </IconButton>
-        )}
+            return (
+              <IconButton onClick={handleAddClick}>
+                <PersonAddAlt1RoundedIcon />
+              </IconButton>
+            );
+
+          if (!friendRequestExist.asking && !friendRequestExist.accepted)
+            return (
+              <>
+                <IconButton onClick={handleAccept}>
+                  <CheckRoundedIcon />
+                </IconButton>
+                <IconButton onClick={handleRefuse}>
+                  <CloseRoundedIcon />
+                </IconButton>
+              </>
+            );
+          return <></>;
+        })()}
 
         <Menu
           anchorEl={anchorEl}

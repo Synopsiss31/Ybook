@@ -133,7 +133,13 @@ export const PostProvider = ({ children, postId }: IPostProviderProps) => {
       response.json().then((data) => {
         setPostValue({
           ...postValue,
-          postComments: [...postValue.postComments, data],
+          postComments: [
+            ...postValue.postComments,
+            {
+              ...data,
+              user,
+            },
+          ],
         });
       });
     }
