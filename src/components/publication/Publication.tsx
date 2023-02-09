@@ -1,6 +1,7 @@
 /* eslint-disable no-nested-ternary */
 // eslint-disable-next-line simple-import-sort/imports
 import { PostProvider, usePostCtx } from '@/lib/contexts/PostContext';
+import { useUserCtx } from '@/lib/contexts/UserCtx';
 import CommentIcon from '@mui/icons-material/ChatBubbleOutline';
 import LikeIcon from '@mui/icons-material/FavoriteBorder';
 import ActiveLikeIcon from '@mui/icons-material/FavoriteOutlined';
@@ -29,6 +30,8 @@ const Publication = () => {
 
   const [comment, setComment] = useState('');
 
+  const { user } = useUserCtx();
+
   useEffect(() => {
     // listen to resize
     window.addEventListener('resize', () => {
@@ -51,9 +54,7 @@ const Publication = () => {
     };
   }, []);
 
-  const isLike = post?.postLikes?.some(
-    (like) => like.userId === post?.user?.id
-  );
+  const isLike = post?.postLikes?.some((like) => like.userId === user?.id);
 
   const nbLikes = post?.postLikes?.length ?? 0;
 

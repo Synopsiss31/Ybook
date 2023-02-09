@@ -1,16 +1,18 @@
+/* eslint-disable no-nested-ternary */
 import HowToRegRoundedIcon from '@mui/icons-material/HowToRegRounded';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
 import { Box, IconButton, Menu, Paper, Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import useSWR from 'swr';
 
 import { useUserCtx } from '@/lib/contexts/UserCtx';
 import { DEFAULT_URL } from '@/lib/hooks/API/users/useAPIUser';
 import { getIdToken } from '@/lib/utils/cognito';
-import type { UserModel } from '@/types/models';
+import { FriendshipStatus } from '@/types/enums';
+import type { FriendshipModel, UserModel } from '@/types/models';
 
 import GetImage from '../image/get';
 // eslint-disable-next-line import/no-named-as-default
@@ -29,46 +31,50 @@ const UserCard: React.FC<IUserCardProps> = ({ user, interaction }) => {
       throw new Error('interaction must be a MUI IconButton');
   }
 
-  const userCo = useUserCtx();
+  const { user: currentUser } = useUserCtx();
 
-  const fetcher = async (url: string) => {
-    const token = await getIdToken();
+  const [friendRequestExist, setFriendRequestExist] = useState({
+    asking: false,
+    accepted: false,
+  });
 
-    const response = await fetch(`${DEFAULT_URL}${url}`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    if (!response.ok) {
-      throw new Error('An error occurred while fetching the data.');
-    }
+  const { data } = useSWR<FriendshipModel>(
+    `/friend/${user.id}`,
+    async (url) => {
+      const token = await getIdToken();
 
-    return response.json();
-  };
+      const resp = await fetch(`${DEFAULT_URL}${url}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-  const [validated, setValidated] = useState(false);
+      if (!resp.ok) {
+        throw new Error('An error occurred while fetching the data.');
+      }
 
-  const { data } = useSWR(
-    isNaN(parseInt(user)) === false ? `/friend/${user}` : null,
-    fetcher,
+      return resp.json();
+    },
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      refreshWhenHidden: false,
-      refreshWhenOffline: false,
     }
   );
 
-  if (!user) return null;
-
-  const rec = data;
+  useEffect(() => {
+    if (data && data.status !== FriendshipStatus.IGNORED) {
+      setFriendRequestExist({
+        asking: data.fromId === currentUser?.id,
+        accepted: data.status === FriendshipStatus.ACCEPTED,
+      });
+    }
+  }, [data]);
 
   const handleAddClick = async () => {
     const token = await getIdToken();
     const resp = await fetch(
-      `${DEFAULT_URL}/friend/create/${userCo.user.id}/${rec.id}`,
+      `${DEFAULT_URL}/friend/create/${currentUser?.id}/${user.id}`,
       {
         method: 'GET',
         headers: {
@@ -84,18 +90,11 @@ const UserCard: React.FC<IUserCardProps> = ({ user, interaction }) => {
     toast('Invitation envoyée', {
       icon: '✅',
     });
-    setValidated(true);
+    setFriendRequestExist({
+      asking: true,
+      accepted: false,
+    });
   };
-
-  // if (menuItems) {
-  //   /* Verify menuItems is an array of MUI MenuItem */
-  //   if (
-  //     !menuItems.every(
-  //       (item) => React.isValidElement(item) && item.type == MenuItem
-  //     )
-  //   )
-  //     throw new Error('menuItems must be an array of MUI MenuItem');
-  // }
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -140,20 +139,12 @@ const UserCard: React.FC<IUserCardProps> = ({ user, interaction }) => {
               overflow: 'hidden',
             }}
           >
-            {rec ? (
-              rec.avatarS3Key ? (
-                <GetImage fileID={rec.avatarS3Key} width={50} height={50} />
-              ) : (
-                <GetImage
-                  fileID={rec.avatarS3Key || ''}
-                  alt={`${rec.firstname} ${rec.lastname}`}
-                  width={50}
-                  height={50}
-                />
-              )
-            ) : (
-              <GetImage fileID={''} alt={`N C`} width={50} height={50} />
-            )}
+            <GetImage
+              fileID={user?.avatarS3Key || ''}
+              width={50}
+              height={50}
+              alt={`${user?.firstname || ''} ${user?.lastname || ''}`}
+            />
           </Box>
         </Grid>
 
@@ -165,9 +156,7 @@ const UserCard: React.FC<IUserCardProps> = ({ user, interaction }) => {
           }}
         >
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {rec
-              ? `${rec.firstname} ${rec.lastname}`
-              : `${user?.firstname} ${user?.lastname}`}
+            {user?.firstname} {user?.lastname}
           </Typography>
         </Grid>
         {interaction && (
@@ -187,12 +176,14 @@ const UserCard: React.FC<IUserCardProps> = ({ user, interaction }) => {
             </Box>
           </Grid>
         )}
-        {validated ? (
-          <HowToRegRoundedIcon />
-        ) : !rec ? (
-          <IconButton onClick={handleMenuClick}>
-            <MoreVertIcon />
-          </IconButton>
+        {friendRequestExist.asking ? (
+          friendRequestExist.accepted ? (
+            <IconButton onClick={handleMenuClick}>
+              <MoreVertIcon />
+            </IconButton>
+          ) : (
+            <HowToRegRoundedIcon />
+          )
         ) : (
           <IconButton onClick={handleAddClick}>
             <PersonAddAlt1RoundedIcon />

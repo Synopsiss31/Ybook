@@ -1,10 +1,4 @@
-import {
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { TextField, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
@@ -75,14 +69,12 @@ const FriendsModal = () => {
     return response.json();
   };
 
-  const { data } = useSWR(`/friend/recommended`, fetcher, {
+  const { data: rec } = useSWR<UserModel[]>(`/friend/recommended`, fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     refreshWhenHidden: false,
     refreshWhenOffline: false,
   });
-
-  const rec = data;
 
   const req = async (url: string) => {
     const token = await getIdToken();
@@ -108,97 +100,105 @@ const FriendsModal = () => {
   });
 
   return (
-    <>
-      <DialogTitle id="alert-dialog-title">{'Friends'}</DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          <Grid
-            container
+    <Grid
+      container
+      sx={{
+        p: 2,
+        width: 550,
+        height: 500,
+        overflow: 'hidden',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+      direction="column"
+      overflow="hidden"
+      xs
+      spacing={2}
+    >
+      <Grid xs container direction="column" spacing={2}>
+        <Grid xs>
+          <Typography>Recommandés</Typography>
+        </Grid>
+        <Grid
+          xs
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'nowrap',
+            overflowX: 'auto',
+            overflowY: 'hidden',
+          }}
+          spacing={2}
+        >
+          {Array.isArray(rec) &&
+            rec.map((user) => (
+              <Grid key={user.id} xs>
+                <UserCard user={user} />
+              </Grid>
+            ))}
+        </Grid>
+      </Grid>
+      <Grid xs container direction="column" spacing={2}>
+        <Grid xs>
+          <TextField
             sx={{
-              p: 2,
-              width: 550,
-              height: 500,
+              width: '100%',
             }}
-            direction="column"
-            overflow="hidden"
-          >
-            <Grid
-              container
-              sx={{
-                width: '100%',
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'row',
-              }}
-            >
-              <Typography sx={{ width: '100%' }}>Recommandés</Typography>
-              <Grid
-                container
-                sx={{
-                  width: '100%',
-                  height: '20%',
-                  display: 'flex',
-                  flexDirection: 'row',
-                  flexWrap: 'nowrap',
-                  overflowX: 'auto',
-                  overflowY: 'hidden',
-                }}
-              >
-                {Array.isArray(rec) &&
-                  rec.map((id) => <UserCard key={id} user={id.id}></UserCard>)}
+            placeholder={'Rechercher un ami...'}
+            onChange={handleChange}
+            value={reqString}
+          />
+        </Grid>
+        <Grid
+          container
+          spacing={2}
+          direction="column"
+          sx={{
+            overflowY: 'auto',
+            maxHeight: 200,
+          }}
+          wrap="nowrap"
+        >
+          {Array.isArray(friends) &&
+            friends.map((user) => (
+              <Grid key={user.id} xs>
+                <UserCard user={user} />
               </Grid>
-              <Grid
-                sx={{
-                  width: '100%',
-                  height: '35%',
-                }}
-              >
-                <TextField
-                  sx={{
-                    width: '100%',
-                  }}
-                  placeholder={'Rechercher un ami...'}
-                  onChange={handleChange}
-                  value={reqString}
-                ></TextField>
-                <Grid>
-                  {Array.isArray(friends) &&
-                    friends.map((id) => (
-                      <UserCard key={id} user={id.id}></UserCard>
-                    ))}
-                </Grid>
-              </Grid>
-              <Grid
-                sx={{
-                  width: '100%',
-                  height: '35%',
-                }}
-              >
-                <Typography sx={{ width: '100%' }}>Demandes</Typography>
-                <Grid
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    flexWrap: 'nowrap',
-                    overflowX: 'auto',
-                    overflowY: 'hidden',
-                  }}
-                >
-                  {Array.isArray(asking) &&
-                    asking.map((id) => (
-                      <FriendRequest
-                        key={id.id}
-                        userID={id.fromId}
-                        id={id.id}
-                      ></FriendRequest>
-                    ))}
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </DialogContentText>
-      </DialogContent>
-    </>
+            ))}
+        </Grid>
+      </Grid>
+      <Grid
+        xs
+        container
+        direction="column"
+        sx={{
+          width: '100%',
+        }}
+      >
+        <Grid xs>
+          <Typography sx={{ width: '100%' }}>Demandes</Typography>
+        </Grid>
+        <Grid
+          xs
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'nowrap',
+            overflowX: 'auto',
+            overflowY: 'hidden',
+          }}
+        >
+          {Array.isArray(asking) &&
+            asking.map((id) => (
+              <FriendRequest
+                key={id.id}
+                userID={id.fromId}
+                id={id.id}
+              ></FriendRequest>
+            ))}
+        </Grid>
+      </Grid>
+    </Grid>
   );
 };
 

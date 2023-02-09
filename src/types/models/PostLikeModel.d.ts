@@ -1,19 +1,12 @@
-import type { PostLike } from '../client';
-import type { PostModel } from './PostModel';
-import type { UserModel } from './UserModel';
-
+import { PostLike } from "../client";
+import { UserModel } from "./UserModel";
+import { PostModel } from "./PostModel";
 export declare class PostLikeModel implements PostLike {
-  id: number;
-
-  createdAt: Date;
-
-  updatedAt: Date;
-
-  user: UserModel;
-
-  post: PostModel;
-
-  userId: number;
-
-  postId: number;
+    id: number;
+    createdAt: Date;
+    updatedAt: Date;
+    user: UserModel;
+    post: PostModel;
+    userId: number;
+    postId: number;
 }

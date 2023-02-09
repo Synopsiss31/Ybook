@@ -1,4 +1,4 @@
-import { Dialog } from '@mui/material';
+import { Box, Modal } from '@mui/material';
 
 // eslint-disable-next-line import/no-cycle
 import { Modals, useAppContext } from '@/lib/contexts/AppContext';
@@ -14,15 +14,29 @@ const AppContextModal = () => {
   };
 
   return (
-    <Dialog
+    <Modal
       open={state.modal !== Modals.None}
       onClose={handleClose}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
     >
-      {state.modal === Modals.CreatePublication && <CreatePostModal />}
-      {state.modal === Modals.Friends && <FriendsModal />}
-    </Dialog>
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400,
+          bgcolor: 'background.paper',
+          border: '2px solid #000',
+          boxShadow: 24,
+          p: 4,
+        }}
+      >
+        {state.modal === Modals.CreatePublication && <CreatePostModal />}
+        {state.modal === Modals.Friends && <FriendsModal />}
+      </Box>
+    </Modal>
   );
 };
 
