@@ -41,7 +41,7 @@
     "titleBar.inactiveForeground": "#e7e7e799"
   },
   "peacock.color": "#076430",
-  "workbench.colorTheme": "City Lights",
+  "workbench.colorTheme": "Default Light+ Experimental",
   "[javascript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
   },
